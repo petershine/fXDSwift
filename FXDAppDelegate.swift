@@ -9,10 +9,20 @@ class FXDAppDelegate: FXDResponder {
 	//var window: UIWindow?
 
 
-	override func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-		// Override point for customization after application launch.
+	override func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {	FXDLog_SEPARATE()
 
-		return super.application(application, didFinishLaunchingWithOptions:launchOptions)
+		NSLog("\(launchOptions)")
+
+		return true
+	}
+
+
+	// Override point for customization after application launch.
+	override func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {	FXDLog_SEPARATE()
+
+		NSLog("\(launchOptions)")
+
+		return true
 	}
 
 	override func applicationWillResignActive(application: UIApplication) {

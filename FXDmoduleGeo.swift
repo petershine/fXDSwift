@@ -9,7 +9,7 @@ import MapKit
 class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 
 
-	lazy var mainGeoManager : CLLocationManager = {	FXDLogFunc()
+	lazy var mainGeoManager : CLLocationManager = {	FXDLog_Func()
 		let geoManager = CLLocationManager()
 		geoManager.delegate = self
 		
@@ -19,20 +19,20 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 	}()
 
 
-	func startGeoModule() {	FXDLogFunc()
+	func startGeoModule() {	FXDLog_Func()
 		let status = CLLocationManager.authorizationStatus()
 		NSLog("status.rawValue: \(status.rawValue)")
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
-			self.mainGeoManager.startUpdatingLocation()
+			mainGeoManager.startUpdatingLocation()
 		}
 		else {
-			self.mainGeoManager.requestAlwaysAuthorization()
+			mainGeoManager.requestAlwaysAuthorization()
 		}
 	}
 
 
-	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {	FXDLogFunc()
+	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {	FXDLog_Func()
 
 		NSLog("status.rawValue: \(status.rawValue)")
 

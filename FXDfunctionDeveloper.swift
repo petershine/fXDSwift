@@ -9,13 +9,15 @@
 import Foundation
 
 
-func FXDLogFunc(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
+func FXDLog_Func(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
 #if ForDEVELOPER
-	var className: NSString = file
-	className = className.lastPathComponent
-	className = className.stringByReplacingOccurrencesOfString(".swift", withString: "")
-
 	NSLog(" ")
-	NSLog("[\(className) \(function)]")
+	NSLog("[\(file.lastPathComponent) \(function)]")
+#endif
+}
+
+func FXDLog_SEPARATE(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
+#if ForDEVELOPER
+	NSLog("\n\n    [\(file.lastPathComponent) \(function)]")
 #endif
 }
