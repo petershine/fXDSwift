@@ -9,7 +9,9 @@ import MapKit
 class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	var didStartLocationManager : Bool = false
+	
 	var mainLocationManager : CLLocationManager?
+	var lastLocation: CLLocation?
 
 
 	deinit {	FXDLog_Func()
@@ -94,7 +96,9 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		FXDLog(locations.last)
+
+		lastLocation = locations.last
+		FXDLog(lastLocation)
 	}
 
 
