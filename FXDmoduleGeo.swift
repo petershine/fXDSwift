@@ -20,9 +20,25 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 	func startGeoModule() {	FXDLog_Func()
+		FXDLog(CLLocationManager.locationServicesEnabled().description)
+		FXDLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
+		FXDLog(CLLocationManager.isRangingAvailable().description)
+		FXDLog(CLLocationManager.deferredLocationUpdatesAvailable().description)
+
+		if (CLLocationManager.locationServicesEnabled() == false) {
+			return
+		}
+
 
 		mainLocationManager = CLLocationManager()
 		mainLocationManager?.delegate = self
+		mainLocationManager?.distanceFilter = 100
+
+		if #available(iOS 9.0, *) {
+			mainLocationManager?.allowsBackgroundLocationUpdates = true
+		} else {
+			// Fallback on earlier versions
+		}
 
 
 		let status = CLLocationManager.authorizationStatus()
