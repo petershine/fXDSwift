@@ -9,12 +9,22 @@
 import Foundation
 
 
+func FXDLog(obj: AnyObject?) {
+#if ForDEVELOPER
+	if (obj != nil) {
+		NSLog("\(obj)")
+	}
+#endif
+}
+
+
 func FXDLog_Func(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
 #if ForDEVELOPER
 	NSLog(" ")
 	NSLog("[\(file.lastPathComponent) \(function)]")
 #endif
 }
+
 
 func FXDLog_SEPARATE(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
 #if ForDEVELOPER

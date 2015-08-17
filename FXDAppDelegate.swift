@@ -9,9 +9,16 @@ class FXDAppDelegate: FXDResponder {
 	//var window: UIWindow?
 
 
+	override func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {	FXDLog_SEPARATE()
+
+		FXDLog(url)
+
+		return true
+	}
+
 	override func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {	FXDLog_SEPARATE()
 
-		NSLog("\(launchOptions)")
+		FXDLog(launchOptions)
 
 		return true
 	}
@@ -20,7 +27,7 @@ class FXDAppDelegate: FXDResponder {
 	// Override point for customization after application launch.
 	override func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {	FXDLog_SEPARATE()
 
-		NSLog("\(launchOptions)")
+		FXDLog(launchOptions)
 
 		return true
 	}

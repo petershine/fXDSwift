@@ -13,15 +13,16 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 		let geoManager = CLLocationManager()
 		geoManager.delegate = self
 		
-		NSLog("geoManager: \(geoManager)")
+		FXDLog(geoManager)
 
 		return geoManager
 	}()
 
 
 	func startGeoModule() {	FXDLog_Func()
+
 		let status = CLLocationManager.authorizationStatus()
-		NSLog("status.rawValue: \(status.rawValue)")
+		NSLog("\(status.rawValue)")
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
 			mainGeoManager.startUpdatingLocation()
@@ -34,7 +35,7 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 
 	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {	FXDLog_Func()
 
-		NSLog("status.rawValue: \(status.rawValue)")
+		NSLog("\(status.rawValue)")
 
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
@@ -46,6 +47,6 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 	}
 
 	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		NSLog("locations.last: \(locations.last)")
+		FXDLog(locations)
 	}
 }
