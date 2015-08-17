@@ -47,6 +47,6 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 	}
 
 	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-		FXDLog(locations)
+		FXDLog(locations.last)
 	}
 }
