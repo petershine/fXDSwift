@@ -12,6 +12,7 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 	lazy var mainGeoManager : CLLocationManager = {	FXDLogFunc()
 		let geoManager = CLLocationManager()
 		geoManager.delegate = self
+		
 		NSLog("geoManager: \(geoManager)")
 
 		return geoManager
@@ -20,12 +21,12 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 
 	func startGeoModule() {	FXDLogFunc()
 		let status = CLLocationManager.authorizationStatus()
+		NSLog("status.rawValue: \(status.rawValue)")
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
-			self.locationManager(self.mainGeoManager, didChangeAuthorizationStatus: status)
+			self.mainGeoManager.startUpdatingLocation()
 		}
 		else {
-			NSLog("status.rawValue: \(status.rawValue)")
 			self.mainGeoManager.requestAlwaysAuthorization()
 		}
 	}
@@ -40,7 +41,7 @@ class FXDmoduleGeo: FXDsuperModule, CLLocationManagerDelegate {
 			manager.startUpdatingLocation()
 		}
 		else {
-			//manager.stopUpdatingLocation()
+			manager.stopUpdatingLocation()
 		}
 	}
 
