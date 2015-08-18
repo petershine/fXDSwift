@@ -42,7 +42,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 		let status = CLLocationManager.authorizationStatus()
-		NSLog("\(status.rawValue)")
+		FXDLog(String(status.rawValue))
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
 			self.startLocationManager(mainLocationManager)
@@ -105,7 +105,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {	FXDLog_Func()
 
-		NSLog("\(status.rawValue)")
+		FXDLog(String(status.rawValue))
 
 
 		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
