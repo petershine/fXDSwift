@@ -55,6 +55,11 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	private func startLocationManager(manager: CLLocationManager?) {	FXDLog_Func()
 
+		if (manager == nil) {
+			return
+		}
+		
+
 		FXDLog(didStartLocationManager.description)
 
 		if (didStartLocationManager) {
@@ -65,10 +70,10 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		didStartLocationManager = true
 
 
-		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyBest
+		manager?.desiredAccuracy = kCLLocationAccuracyBest
 
 		if (UIApplication.sharedApplication().applicationState == .Background) {
-			mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+			manager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers
 		}
 
 		manager?.startUpdatingLocation()
