@@ -134,7 +134,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		FXDLog_Func()
 		FXDLog(notification)
 
-		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers*2.0
 		FXDLog(mainLocationManager?.desiredAccuracy)
 	}
 }
