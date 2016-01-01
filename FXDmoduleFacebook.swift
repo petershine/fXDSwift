@@ -66,7 +66,17 @@ class FXDmoduleFacebook: NSObject {
 
 		FXDLog(typeIdentifier)
 		FXDLog(presentingScene)
-		FXDLog(Bool(FBSDKAccessToken.current() != nil))
+		FXDLog(FBSDKAccessToken.current() != nil)
+
+		guard (FBSDKAccessToken.current() == nil)
+			else {
+				self.showActionSheetFor(
+					typeIdentifier: typeIdentifier,
+					presentingScene: presentingScene,
+					callback: callback)
+
+				return
+		}
 
 
 		let loginManager: FBSDKLoginManager = FBSDKLoginManager()
@@ -90,10 +100,11 @@ class FXDmoduleFacebook: NSObject {
 		//2016-12-24 00:39:05.516130 PopToo[10164:2443443] FBSDKLog: ** WARNING: You are requesting permissions inside the completion block of an existing login.This is unsupported behavior. You should request additional permissions only when they are needed, such as requesting for publish_actionswhen the user performs a sharing action.
 
 
-		loginManager.logIn(withPublishPermissions:["publish_actions",
-		                                           "manage_pages",
-		                                           "publish_pages"],
-		                   from: presentingScene)
+		loginManager.logIn(
+			withPublishPermissions:["publish_actions",
+			                        "manage_pages",
+			                        "publish_pages"],
+			from: presentingScene)
 		{ (result:FBSDKLoginManagerLoginResult?,
 			error:Error?) in
 
@@ -113,7 +124,11 @@ class FXDmoduleFacebook: NSObject {
 
 			FXDLog(result?.isCancelled == false)
 
-			callback((result?.isCancelled)! == false, error as Any)
+
+			self.showActionSheetFor(
+				typeIdentifier: typeIdentifier,
+				presentingScene: presentingScene,
+				callback: callback)
 		}
 	}
 
@@ -147,7 +162,8 @@ class FXDmoduleFacebook: NSObject {
 			graphPath: facebookGraphMeAccounts,
 			parameters: ["fields": "data"])
 
-		graphRequestMe?.start(completionHandler:
+		graphRequestMe?.start(
+			completionHandler:
 			{ (requestConnection:FBSDKGraphRequestConnection?,
 				result:Any?,
 				error:Error?) in
@@ -160,7 +176,8 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog(collectedAccounts)
 
 
-				graphRequestAccounts?.start(completionHandler:
+				graphRequestAccounts?.start(
+					completionHandler:
 					{ (requestCOnnection:FBSDKGraphRequestConnection?,
 						result:Any?,
 						error:Error?) in
@@ -182,7 +199,10 @@ class FXDmoduleFacebook: NSObject {
 						self.multiAccountArray = collectedAccounts
 
 
-						self.PresentActionSheetWith(accounts: collectedAccounts, presentingScene: presentingScene, callback: callback)
+						self.PresentActionSheetWith(
+							accounts: collectedAccounts,
+							presentingScene: presentingScene,
+							callback: callback)
 				})
 		})
 	}
@@ -197,9 +217,15 @@ class FXDmoduleFacebook: NSObject {
 		let actionsheetTitle = NSLocalizedString("Please select your Facebook Timeline or Page", comment:"")
 
 
-		let alertController:FXDAlertController = FXDAlertController(title: actionsheetTitle, message: nil, preferredStyle: .actionSheet)
+		let alertController:FXDAlertController = FXDAlertController(
+			title: actionsheetTitle,
+			message: nil,
+			preferredStyle: .actionSheet)
 
-		let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { (action:UIAlertAction) in
+		let cancelAction = UIAlertAction(
+			title: NSLocalizedString("Cancel", comment: ""),
+			style: .cancel)
+		{ (action:UIAlertAction) in
 
 			//TODO: Should delete multiAccountArray?
 			self.multiAccountArray = nil
@@ -207,12 +233,15 @@ class FXDmoduleFacebook: NSObject {
 			callback(false, NSNull())
 		}
 
-		let signOutAction = UIAlertAction(title: NSLocalizedString("Sign Out", comment: ""), style: .destructive) { (action:UIAlertAction) in
+		let signOutAction = UIAlertAction(
+			title: NSLocalizedString("Sign Out", comment: ""),
+			style: .destructive)
+		{ (action:UIAlertAction) in
 
 			//TODO: resetCredential: Sign Out
 			self.multiAccountArray = nil
 
-			callback(false, NSNull())
+			callback(true, NSNull())
 		}
 
 		alertController.addAction(cancelAction)
@@ -222,25 +251,30 @@ class FXDmoduleFacebook: NSObject {
 		for account in accounts {
 			let buttonTitle: String = (account as! Dictionary<String, Any>)["id"] as! String
 
-			let selectAction = UIAlertAction(title: buttonTitle, style: .default, handler: { (action:UIAlertAction) in
+			let selectAction = UIAlertAction(
+				title: buttonTitle,
+				style: .default,
+				handler:
+				{ (action:UIAlertAction) in
 
-				let accountObjKey = userdefaultObjMainFacebookAccountIdentifier
+					let accountObjKey = userdefaultObjMainFacebookAccountIdentifier
 
-				//TODO: save to userDefaults
+					//TODO: save to userDefaults
 
-				self.currentFacebookAccount = account as! Dictionary
+					self.currentFacebookAccount = account as! Dictionary
 
-				callback(true, account)
+					callback(true, account)
 			})
 
 			alertController.addAction(selectAction)
-
+			
 		}
+		
+		
 
-
-
-		presentingScene.present(alertController, animated: true, completion: nil)
-
-		callback(true, NSNull())
+		presentingScene.present(
+			alertController,
+			animated: true,
+			completion: nil)
 	}
 }
