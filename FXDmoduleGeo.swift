@@ -33,12 +33,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		mainLocationManager = CLLocationManager()
 		mainLocationManager?.delegate = self
 		mainLocationManager?.distanceFilter = 100
-
-		if #available(iOS 9.0, *) {
-			mainLocationManager?.allowsBackgroundLocationUpdates = true
-		} else {
-			// Fallback on earlier versions
-		}
+		mainLocationManager?.allowsBackgroundLocationUpdates = true
 
 
 		let status = CLLocationManager.authorizationStatus()
