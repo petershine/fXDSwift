@@ -76,13 +76,13 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 		NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-			selector: "observedUIApplicationDidBecomeActive:",
+			selector: #selector(FXDprotocolShared.observedUIApplicationDidBecomeActive(_:)),
 			name: UIApplicationDidBecomeActiveNotification,
 			object: nil)
 
 		NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-			selector: "observedUIApplicationDidEnterBackground:",
+			selector: #selector(FXDprotocolShared.observedUIApplicationDidEnterBackground(_:)),
 			name: UIApplicationDidEnterBackgroundNotification,
 			object: nil)
 	}

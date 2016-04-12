@@ -18,7 +18,7 @@ func FXDLog(obj: AnyObject?) {
 }
 
 
-func FXDLog_Func(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
+func FXDLog_Func(file: NSString = #file, function: NSString = #function) {
 #if ForDEVELOPER
 	NSLog(" ")
 	NSLog("[\(file.lastPathComponent) \(function)]")
@@ -26,7 +26,7 @@ func FXDLog_Func(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
 }
 
 
-func FXDLog_SEPARATE(file: NSString = __FILE__, function: NSString = __FUNCTION__) {
+func FXDLog_SEPARATE(file: NSString = #file, function: NSString = #function) {
 #if ForDEVELOPER
 	NSLog("\n\n    [\(file.lastPathComponent) \(function)]")
 #endif
