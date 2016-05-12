@@ -8,9 +8,6 @@ import MediaPlayer
 
 class FXDmoduleMedia: NSObject {
 
-	var playbackState: MPMusicPlaybackState?
-	var nowPlayingItem: MPMediaItem?
-
 	lazy var musicPlayer: MPMusicPlayerController = {
 		return MPMusicPlayerController.systemMusicPlayer()
 	}()
@@ -19,13 +16,6 @@ class FXDmoduleMedia: NSObject {
 	deinit {	FXDLog_Func()
 		self.musicPlayer.endGeneratingPlaybackNotifications()
 		MPMediaLibrary.defaultMediaLibrary().endGeneratingLibraryChangeNotifications()
-	}
-
-	override init() {	FXDLog_Func()
-		super.init()
-
-		playbackState = self.musicPlayer.playbackState
-		nowPlayingItem = self.musicPlayer.nowPlayingItem
 	}
 
 
