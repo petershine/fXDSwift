@@ -1,6 +1,7 @@
 
 
 import UIKit
+import Foundation
 
 import CoreLocation
 import MapKit
@@ -43,6 +44,8 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 			self.startLocationManager(mainLocationManager)
 		}
 		else {
+			//MARK: If the NSLocationAlwaysUsageDescription key is not specified in your Info.plist, this method will do nothing, as your app will be assumed not to support Always authorization.
+
 			mainLocationManager?.requestAlwaysAuthorization()
 		}
 	}
@@ -76,13 +79,13 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 		NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-			selector: #selector(FXDprotocolShared.observedUIApplicationDidBecomeActive(_:)),
+			selector: #selector(observedUIApplicationDidBecomeActive(_:)),
 			name: UIApplicationDidBecomeActiveNotification,
 			object: nil)
 
 		NSNotificationCenter.defaultCenter()
 			.addObserver(self,
-			selector: #selector(FXDprotocolShared.observedUIApplicationDidEnterBackground(_:)),
+			selector: #selector(observedUIApplicationDidEnterBackground(_:)),
 			name: UIApplicationDidEnterBackgroundNotification,
 			object: nil)
 	}
