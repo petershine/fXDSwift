@@ -50,7 +50,7 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(notification: NSNotification) {
-		FXDLog(self.musicPlayer.nowPlayingItem)
+		FXDLog(self.musicPlayer.nowPlayingItem?.title)
 	}
 
 	func observedMPMediaLibraryDidChange(notification: NSNotification) {
