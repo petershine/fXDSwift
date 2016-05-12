@@ -134,7 +134,9 @@ class FXDAppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	// MARK: - Core Data Saving support
-	func saveContext () {
+	func saveContext () {	FXDLog_Func()
+		FXDLog(managedObjectContext.hasChanges)
+
 		if managedObjectContext.hasChanges {
 			do {
 				try managedObjectContext.save()
