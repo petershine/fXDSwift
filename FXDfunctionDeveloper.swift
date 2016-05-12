@@ -1,19 +1,12 @@
-//
-//  FXDfunctionDeveloper.swift
-//  season2016
-//
-//  Created by petershine on 8/16/15.
-//  Copyright © 2015 fXceed. All rights reserved.
-//
 
+
+import UIKit
 import Foundation
 
 
 func FXDLog(obj: AnyObject?) {
 #if ForDEVELOPER
-	if (obj != nil) {
-		NSLog("\(obj)")
-	}
+	NSLog("\(obj)")
 #endif
 }
 
