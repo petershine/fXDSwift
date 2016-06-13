@@ -10,6 +10,12 @@ func FXDLog(obj: AnyObject?) {
 #endif
 }
 
+func FXDLog_Observed(obj: AnyObject?) {
+#if ForDEVELOPER
+	NSLog("_Observed: \(obj)")
+#endif
+}
+
 
 func FXDLog_Func(file: NSString = #file, function: NSString = #function) {
 #if ForDEVELOPER
