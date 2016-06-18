@@ -15,45 +15,51 @@ class FXDmoduleMedia: NSObject {
 
 	deinit {	FXDLog_Func()
 		self.musicPlayer.endGeneratingPlaybackNotifications()
-		MPMediaLibrary.defaultMediaLibrary().endGeneratingLibraryChangeNotifications()
+		MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
 	}
 
 
 	func startObservingMediaNotifications() {	FXDLog_Func()
+		//MARK: Can't use mediaModule for simulator
+		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
+		if TARGET_OS_SIMULATOR != 0 {
+			return
+		}
 
-		NSNotificationCenter.defaultCenter()
+
+		NotificationCenter.default()
 			.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerPlaybackStateDidChange(_:)),
-			             name: MPMusicPlayerControllerPlaybackStateDidChangeNotification,
+			             name: NSNotification.Name.MPMusicPlayerControllerPlaybackStateDidChange,
 			             object:self.musicPlayer)
 
-		NSNotificationCenter.defaultCenter()
+		NotificationCenter.default()
 			.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerNowPlayingItemDidChange(_:)),
-			             name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification,
+			             name: NSNotification.Name.MPMusicPlayerControllerNowPlayingItemDidChange,
 			             object:self.musicPlayer)
 
 		self.musicPlayer.beginGeneratingPlaybackNotifications()
 
 
-		NSNotificationCenter.defaultCenter()
+		NotificationCenter.default()
 			.addObserver(self,
 			             selector: #selector(observedMPMediaLibraryDidChange(_:)),
-			             name: MPMediaLibraryDidChangeNotification,
-			             object:MPMediaLibrary.defaultMediaLibrary())
+			             name: NSNotification.Name.MPMediaLibraryDidChange,
+			             object:MPMediaLibrary.default())
 
-		MPMediaLibrary.defaultMediaLibrary().beginGeneratingLibraryChangeNotifications()
+		MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
 	}
 
-	func observedMPMusicPlayerControllerPlaybackStateDidChange(notification: NSNotification) {
+	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
 		FXDLog(self.musicPlayer.playbackState.rawValue)
 	}
 
-	func observedMPMusicPlayerControllerNowPlayingItemDidChange(notification: NSNotification) {
+	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 		FXDLog(self.musicPlayer.nowPlayingItem?.title)
 	}
 
-	func observedMPMediaLibraryDidChange(notification: NSNotification) {
-		FXDLog(MPMediaLibrary.defaultMediaLibrary().lastModifiedDate)
+	func observedMPMediaLibraryDidChange(_ notification: Notification) {
+		FXDLog(MPMediaLibrary.default().lastModifiedDate)
 	}
 }

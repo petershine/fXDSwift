@@ -40,7 +40,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		let status = CLLocationManager.authorizationStatus()
 		FXDLog(String(status.rawValue))
 
-		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
+		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
 			self.startLocationManager(mainLocationManager)
 		}
 		else {
@@ -51,7 +51,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 
-	private func startLocationManager(manager: CLLocationManager?) {	FXDLog_Func()
+	private func startLocationManager(_ manager: CLLocationManager?) {	FXDLog_Func()
 
 		if (manager == nil) {
 			return
@@ -70,29 +70,29 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 		manager?.desiredAccuracy = kCLLocationAccuracyBest
 
-		if (UIApplication.sharedApplication().applicationState == .Background) {
+		if (UIApplication.shared().applicationState == .background) {
 			manager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers
 		}
 
 		manager?.startUpdatingLocation()
 
 
-		NSNotificationCenter.defaultCenter()
+		NotificationCenter.default()
 			.addObserver(self,
 			selector: #selector(observedUIApplicationDidBecomeActive(_:)),
-			name: UIApplicationDidBecomeActiveNotification,
+			name: NSNotification.Name.UIApplicationDidBecomeActive,
 			object: nil)
 
-		NSNotificationCenter.defaultCenter()
+		NotificationCenter.default()
 			.addObserver(self,
 			selector: #selector(observedUIApplicationDidEnterBackground(_:)),
-			name: UIApplicationDidEnterBackgroundNotification,
+			name: NSNotification.Name.UIApplicationDidEnterBackground,
 			object: nil)
 	}
 
-	private func stopLocationManager(manager: CLLocationManager?) {	FXDLog_Func()
+	private func stopLocationManager(_ manager: CLLocationManager?) {	FXDLog_Func()
 
-		NSNotificationCenter.defaultCenter().removeObserver(self)
+		NotificationCenter.default().removeObserver(self)
 
 		manager?.stopUpdatingLocation()
 
@@ -101,12 +101,12 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 
-	func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {	FXDLog_Func()
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
 		FXDLog(String(status.rawValue))
 
 
-		if (status == .AuthorizedAlways || status == .AuthorizedWhenInUse) {
+		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
 			self.startLocationManager(manager)
 		}
 		else {
@@ -114,21 +114,21 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-	func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
 		lastLocation = locations.last
 		FXDLog(lastLocation)
 	}
 
 
-	func observedUIApplicationDidBecomeActive(notification: NSNotification) {	FXDLog_Func()
+	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	FXDLog_Func()
 		FXDLog(notification)
 
 		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyBest
 		FXDLog(mainLocationManager?.desiredAccuracy)
 	}
 
-	func observedUIApplicationDidEnterBackground(notification: NSNotification) {
+	func observedUIApplicationDidEnterBackground(_ notification: Notification) {
 		FXDLog_Func()
 		FXDLog(notification)
 

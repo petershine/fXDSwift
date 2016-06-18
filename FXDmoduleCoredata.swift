@@ -9,40 +9,40 @@ import CoreData
 class FXDmoduleCoredata: NSObject {
 
 
-	lazy var applicationDocumentsDirectory: NSURL = {
+	lazy var applicationDocumentsDirectory: URL = {
 		// The directory the application uses to store the Core Data store file. This code uses a directory named "{BundleId}" in the application's documents Application Support directory.
-		let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+		let urls = FileManager.default().urlsForDirectory(.documentDirectory, inDomains: .userDomainMask)
 		return urls[urls.count-1]
 	}()
 
 	lazy var managedObjectModel: NSManagedObjectModel = {	FXDLog_Func()
 		// The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
 
-		let bundleName: String = NSBundle.mainBundle().infoDictionary?["CFBundleName"] as! String
-		let modelURL = NSBundle.mainBundle().URLForResource(bundleName, withExtension: "momd")!
+		let bundleName: String = Bundle.main().infoDictionary?["CFBundleName"] as! String
+		let modelURL = Bundle.main().urlForResource(bundleName, withExtension: "momd")!
 		FXDLog(modelURL)
 
-		return NSManagedObjectModel(contentsOfURL: modelURL)!
+		return NSManagedObjectModel(contentsOf: modelURL)!
 	}()
 
 	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {	FXDLog_Func()
 		// The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
 		// Create the coordinator and store
 
-		var bundleIdentifier: String = NSBundle.mainBundle().infoDictionary?["CFBundleIdentifier"] as! String
-		bundleIdentifier = bundleIdentifier.stringByReplacingOccurrencesOfString(".", withString: "_")
+		var bundleIdentifier: String = Bundle.main().infoDictionary?["CFBundleIdentifier"] as! String
+		bundleIdentifier = bundleIdentifier.replacingOccurrences(of: ".", with: "_")
 
 		let sqliteFilename: String = bundleIdentifier + ".sqlite"
 		FXDLog(sqliteFilename)
 
 
-		let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent(sqliteFilename)
+		let url = try! self.applicationDocumentsDirectory.appendingPathComponent(sqliteFilename)
 		let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
 
 		var failureReason = "There was an error creating or loading the application's saved data."
 
 		do {
-			try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+			try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
 
 		} catch {
 			// Report any error we got.
@@ -66,7 +66,7 @@ class FXDmoduleCoredata: NSObject {
 		// Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
 
 		let coordinator = self.persistentStoreCoordinator
-		var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+		var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 		managedObjectContext.persistentStoreCoordinator = coordinator
 
 		return managedObjectContext
