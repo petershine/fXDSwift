@@ -21,10 +21,10 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 	func startGeoModule() {	FXDLog_Func()
-		FXDLog(CLLocationManager.locationServicesEnabled().description as AnyObject)
-		FXDLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description as AnyObject)
-		FXDLog(CLLocationManager.isRangingAvailable().description as AnyObject)
-		FXDLog(CLLocationManager.deferredLocationUpdatesAvailable().description as AnyObject)
+		FXDLog(CLLocationManager.locationServicesEnabled().description)
+		FXDLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
+		FXDLog(CLLocationManager.isRangingAvailable().description)
+		FXDLog(CLLocationManager.deferredLocationUpdatesAvailable().description)
 
 		if (CLLocationManager.locationServicesEnabled() == false) {
 			return
@@ -38,7 +38,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 		let status = CLLocationManager.authorizationStatus()
-		FXDLog(String(status.rawValue) as AnyObject)
+		FXDLog(String(status.rawValue))
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
 			self.startLocationManager(mainLocationManager)
@@ -58,7 +58,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		}
 		
 
-		FXDLog(didStartLocationManager.description as AnyObject)
+		FXDLog(didStartLocationManager.description)
 
 		if (didStartLocationManager) {
 			return
@@ -103,7 +103,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
-		FXDLog(String(status.rawValue) as AnyObject)
+		FXDLog(String(status.rawValue))
 
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
@@ -122,17 +122,17 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	FXDLog_Func()
-		FXDLog(notification as AnyObject)
+		FXDLog(notification)
 
 		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyBest
-		FXDLog(mainLocationManager?.desiredAccuracy as AnyObject)
+		FXDLog(mainLocationManager?.desiredAccuracy)
 	}
 
 	func observedUIApplicationDidEnterBackground(_ notification: Notification) {
 		FXDLog_Func()
-		FXDLog(notification as AnyObject)
+		FXDLog(notification)
 
 		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers*2.0
-		FXDLog(mainLocationManager?.desiredAccuracy as AnyObject)
+		FXDLog(mainLocationManager?.desiredAccuracy)
 	}
 }

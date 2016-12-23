@@ -20,7 +20,7 @@ class FXDmoduleCoredata: NSObject {
 
 		let bundleName: String = Bundle.main.infoDictionary?["CFBundleName"] as! String
 		let modelURL = Bundle.main.url(forResource: bundleName, withExtension: "momd")
-		FXDLog(modelURL as AnyObject?)
+		FXDLog(modelURL)
 
 		return NSManagedObjectModel(contentsOf: modelURL!)!
 	}()
@@ -33,7 +33,7 @@ class FXDmoduleCoredata: NSObject {
 		bundleIdentifier = bundleIdentifier.replacingOccurrences(of: ".", with: "_")
 
 		let sqliteFilename: String = bundleIdentifier + ".sqlite"
-		FXDLog(sqliteFilename as AnyObject?)
+		FXDLog(sqliteFilename)
 
 
 		let url = self.applicationDocumentsDirectory.appendingPathComponent(sqliteFilename)
@@ -75,7 +75,7 @@ class FXDmoduleCoredata: NSObject {
 
 	// MARK: - Core Data Saving support
 	func saveContext () {	FXDLog_Func()
-		FXDLog(managedObjectContext.hasChanges as AnyObject?)
+		FXDLog(managedObjectContext.hasChanges)
 
 		if managedObjectContext.hasChanges {
 			do {

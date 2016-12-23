@@ -52,14 +52,14 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.playbackState.rawValue as AnyObject)
+		FXDLog(self.musicPlayer.playbackState.rawValue)
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.nowPlayingItem?.title as AnyObject)
+		FXDLog(self.musicPlayer.nowPlayingItem?.title)
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
-		FXDLog(MPMediaLibrary.default().lastModifiedDate as AnyObject)
+		FXDLog(MPMediaLibrary.default().lastModifiedDate)
 	}
 }

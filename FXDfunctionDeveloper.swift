@@ -4,13 +4,13 @@ import UIKit
 import Foundation
 
 
-func FXDLog(_ obj: AnyObject?) {
+func FXDLog(_ obj: Any?) {
 #if ForDEVELOPER
 	NSLog("\(obj)")
 #endif
 }
 
-func FXDLog_Observed(_ obj: AnyObject?) {
+func FXDLog_Observed(_ obj: Any?) {
 #if ForDEVELOPER
 	NSLog("_Observed: \(obj)")
 #endif
