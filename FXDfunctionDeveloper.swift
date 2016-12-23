@@ -30,3 +30,9 @@ func SWIFTLog_SEPARATE(_ file: NSString = #file, function: NSString = #function)
 	NSLog("\n\n    [\(file.lastPathComponent) \(function)]")
 #endif
 }
+
+
+
+//MARK: Closures
+//typedef void (^FXDcallbackFinish)(SEL caller, BOOL didFinish, id responseObj);
+typealias finishedClosure = (_ shouldContinue: Bool, _ responseObj: Any?) -> Void
