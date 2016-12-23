@@ -46,7 +46,9 @@ class FXDmoduleFacebook: NSObject {
 
 	}()
 
-	var currentMainAccount: ACAccount?
+	lazy var currentFacebookAccount: Dictionary? = {
+		return UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
+	}()
 
 
 
