@@ -27,13 +27,13 @@ class FXDmoduleMedia: NSObject {
 		}
 
 
-		NotificationCenter.default()
+		NotificationCenter.default
 			.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerPlaybackStateDidChange(_:)),
 			             name: NSNotification.Name.MPMusicPlayerControllerPlaybackStateDidChange,
 			             object:self.musicPlayer)
 
-		NotificationCenter.default()
+		NotificationCenter.default
 			.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerNowPlayingItemDidChange(_:)),
 			             name: NSNotification.Name.MPMusicPlayerControllerNowPlayingItemDidChange,
@@ -42,7 +42,7 @@ class FXDmoduleMedia: NSObject {
 		self.musicPlayer.beginGeneratingPlaybackNotifications()
 
 
-		NotificationCenter.default()
+		NotificationCenter.default
 			.addObserver(self,
 			             selector: #selector(observedMPMediaLibraryDidChange(_:)),
 			             name: NSNotification.Name.MPMediaLibraryDidChange,
@@ -52,14 +52,14 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.playbackState.rawValue)
+		FXDLog(self.musicPlayer.playbackState.rawValue as AnyObject)
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.nowPlayingItem?.title)
+		FXDLog(self.musicPlayer.nowPlayingItem?.title as AnyObject)
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
-		FXDLog(MPMediaLibrary.default().lastModifiedDate)
+		FXDLog(MPMediaLibrary.default().lastModifiedDate as AnyObject)
 	}
 }
