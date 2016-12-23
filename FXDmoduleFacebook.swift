@@ -19,7 +19,11 @@ class FXDmoduleFacebook: NSObject {
 
 
 	public func checkSession() {	FXDLog_Func()
-		FXDLog(FBSDKAccessToken.current())
+		if (FBSDKAccessToken.current() != nil) {
+			//TODO:
+		}
+
+		NSLog("\(FBSDKAccessToken.current() != nil)")
 	}
 
 }
