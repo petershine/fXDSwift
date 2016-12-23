@@ -13,13 +13,13 @@ class FXDmoduleMedia: NSObject {
 	}()
 
 
-	deinit {	FXDLog_Func()
+	deinit {	SWIFTLog_Func()
 		self.musicPlayer.endGeneratingPlaybackNotifications()
 		MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
 	}
 
 
-	func startObservingMediaNotifications() {	FXDLog_Func()
+	func startObservingMediaNotifications() {	SWIFTLog_Func()
 		//MARK: Can't use mediaModule for simulator
 		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
 		if TARGET_OS_SIMULATOR != 0 {
@@ -52,14 +52,14 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.playbackState.rawValue)
+		SWIFTLog(self.musicPlayer.playbackState.rawValue)
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.nowPlayingItem?.title)
+		SWIFTLog(self.musicPlayer.nowPlayingItem?.title)
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
-		FXDLog(MPMediaLibrary.default().lastModifiedDate)
+		SWIFTLog(MPMediaLibrary.default().lastModifiedDate)
 	}
 }

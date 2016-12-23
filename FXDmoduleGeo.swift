@@ -15,16 +15,16 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	var lastLocation: CLLocation?
 
 
-	deinit {	FXDLog_Func()
+	deinit {	SWIFTLog_Func()
 		self.stopLocationManager(mainLocationManager)
 	}
 
 
-	func startGeoModule() {	FXDLog_Func()
-		FXDLog(CLLocationManager.locationServicesEnabled().description)
-		FXDLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
-		FXDLog(CLLocationManager.isRangingAvailable().description)
-		FXDLog(CLLocationManager.deferredLocationUpdatesAvailable().description)
+	func startGeoModule() {	SWIFTLog_Func()
+		SWIFTLog(CLLocationManager.locationServicesEnabled().description)
+		SWIFTLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
+		SWIFTLog(CLLocationManager.isRangingAvailable().description)
+		SWIFTLog(CLLocationManager.deferredLocationUpdatesAvailable().description)
 
 		if (CLLocationManager.locationServicesEnabled() == false) {
 			return
@@ -38,7 +38,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 		let status = CLLocationManager.authorizationStatus()
-		FXDLog(String(status.rawValue))
+		SWIFTLog(String(status.rawValue))
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
 			self.startLocationManager(mainLocationManager)
@@ -51,14 +51,14 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 
-	private func startLocationManager(_ manager: CLLocationManager?) {	FXDLog_Func()
+	private func startLocationManager(_ manager: CLLocationManager?) {	SWIFTLog_Func()
 
 		if (manager == nil) {
 			return
 		}
 		
 
-		FXDLog(didStartLocationManager.description)
+		SWIFTLog(didStartLocationManager.description)
 
 		if (didStartLocationManager) {
 			return
@@ -90,7 +90,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 			object: nil)
 	}
 
-	private func stopLocationManager(_ manager: CLLocationManager?) {	FXDLog_Func()
+	private func stopLocationManager(_ manager: CLLocationManager?) {	SWIFTLog_Func()
 
 		NotificationCenter.default.removeObserver(self)
 
@@ -101,9 +101,9 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 
-	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	SWIFTLog_Func()
 
-		FXDLog(String(status.rawValue))
+		SWIFTLog(String(status.rawValue))
 
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
@@ -117,22 +117,22 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
 		lastLocation = locations.last
-		FXDLog(lastLocation)
+		SWIFTLog(lastLocation)
 	}
 
 
-	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	FXDLog_Func()
-		FXDLog(notification)
+	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	SWIFTLog_Func()
+		SWIFTLog(notification)
 
 		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyBest
-		FXDLog(mainLocationManager?.desiredAccuracy)
+		SWIFTLog(mainLocationManager?.desiredAccuracy)
 	}
 
 	func observedUIApplicationDidEnterBackground(_ notification: Notification) {
-		FXDLog_Func()
-		FXDLog(notification)
+		SWIFTLog_Func()
+		SWIFTLog(notification)
 
 		mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers*2.0
-		FXDLog(mainLocationManager?.desiredAccuracy)
+		SWIFTLog(mainLocationManager?.desiredAccuracy)
 	}
 }
