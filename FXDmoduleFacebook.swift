@@ -61,31 +61,52 @@ class FXDmoduleFacebook: NSObject {
 	}
 
 
-	public func checkSession() {	SWIFTLog_Func()
-		if (FBSDKAccessToken.current() != nil) {
-			//TODO:
-		}
+	@objc public func signInAccountForIdentifier(identifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	SWIFTLog_Func()
 
-		SWIFTLog("\(FBSDKAccessToken.current() != nil)")
-	}
-
-
-	public func signInBySelectingAccountForTypeIdentifier(typeIdentifier: String, presentingScene: UIViewController, callback: finishedClosure) {	SWIFTLog_Func()
-
-		SWIFTLog(typeIdentifier)
+		SWIFTLog(identifier)
 		SWIFTLog(presentingScene)
+		SWIFTLog(Bool(FBSDKAccessToken.current() != nil))
 
 		// Must be Facebook account
-		guard typeIdentifier == self.typeIdentifier
+		guard identifier == self.typeIdentifier
 			else {
-				callback(false, nil)
+				callback(false, "")
 				return
 		}
 
 
 
+		//TODO: Facebook Login
+		/*
+FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+[login
+logInWithReadPermissions: @[@"public_profile"]
+fromViewController:self
+handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+if (error) {
+NSLog(@"Process error");
+} else if (result.isCancelled) {
+NSLog(@"Cancelled");
+} else {
+NSLog(@"Logged in");
+}
+}];
+*/
 
+		let login: FBSDKLoginManager = FBSDKLoginManager()
 
-		callback(false, nil)
+		login.logIn(withReadPermissions: [facebookPermissionPublicProfile],
+		            from: presentingScene)
+		{
+			(result:FBSDKLoginManagerLoginResult?,
+			error:Error?) in
+
+			SWIFTLog(result)
+			SWIFTLog(error)
+
+			SWIFTLog(result?.isCancelled)
+
+			callback((result?.isCancelled)! == false, error as Any)
+		}
 	}
 }

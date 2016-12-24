@@ -35,4 +35,4 @@ func SWIFTLog_SEPARATE(_ file: NSString = #file, function: NSString = #function)
 
 //MARK: Closures
 //typedef void (^FXDcallbackFinish)(SEL caller, BOOL didFinish, id responseObj);
-typealias finishedClosure = (_ shouldContinue: Bool, _ responseObj: Any?) -> Void
+typealias finishedClosure = (Bool, Any) -> Void
