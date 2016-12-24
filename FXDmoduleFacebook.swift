@@ -52,7 +52,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	deinit {	SWIFTLog_Func()
+	deinit {	FXDLog_Func()
 
 	}
 
@@ -61,37 +61,21 @@ class FXDmoduleFacebook: NSObject {
 	}
 
 
-	@objc public func signInAccountForIdentifier(identifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	SWIFTLog_Func()
+	@objc public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
-		SWIFTLog(identifier)
-		SWIFTLog(presentingScene)
-		SWIFTLog(Bool(FBSDKAccessToken.current() != nil))
+		FXDLog(typeIdentifier)
+		FXDLog(presentingScene)
+		FXDLog(Bool(FBSDKAccessToken.current() != nil))
 
 		// Must be Facebook account
-		guard identifier == self.typeIdentifier
+		guard typeIdentifier == self.typeIdentifier
 			else {
-				callback(false, "")
+				callback(false, NSNull())
 				return
 		}
 
 
 
-		//TODO: Facebook Login
-		/*
-FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-[login
-logInWithReadPermissions: @[@"public_profile"]
-fromViewController:self
-handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-if (error) {
-NSLog(@"Process error");
-} else if (result.isCancelled) {
-NSLog(@"Cancelled");
-} else {
-NSLog(@"Logged in");
-}
-}];
-*/
 
 		let login: FBSDKLoginManager = FBSDKLoginManager()
 
@@ -101,8 +85,7 @@ NSLog(@"Logged in");
 			(result:FBSDKLoginManagerLoginResult?,
 			error:Error?) in
 
-			SWIFTLog(result)
-			SWIFTLog(error)
+			FXDLog(result?.description)
 
 			SWIFTLog(result?.isCancelled)
 

@@ -15,17 +15,17 @@ class FXDmoduleCoredata: NSObject {
 		return urls[urls.count-1]
 	}()
 
-	lazy var managedObjectModel: NSManagedObjectModel = {	SWIFTLog_Func()
+	lazy var managedObjectModel: NSManagedObjectModel = {	FXDLog_Func()
 		// The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
 
 		let bundleName: String = Bundle.main.infoDictionary?["CFBundleName"] as! String
 		let modelURL = Bundle.main.url(forResource: bundleName, withExtension: "momd")
-		SWIFTLog(modelURL)
+		FXDLog(modelURL)
 
 		return NSManagedObjectModel(contentsOf: modelURL!)!
 	}()
 
-	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {	SWIFTLog_Func()
+	lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {	FXDLog_Func()
 		// The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
 		// Create the coordinator and store
 
@@ -33,7 +33,7 @@ class FXDmoduleCoredata: NSObject {
 		bundleIdentifier = bundleIdentifier.replacingOccurrences(of: ".", with: "_")
 
 		let sqliteFilename: String = bundleIdentifier + ".sqlite"
-		SWIFTLog(sqliteFilename)
+		FXDLog(sqliteFilename)
 
 
 		let url = self.applicationDocumentsDirectory.appendingPathComponent(sqliteFilename)
@@ -74,8 +74,8 @@ class FXDmoduleCoredata: NSObject {
 
 
 	// MARK: - Core Data Saving support
-	func saveContext () {	SWIFTLog_Func()
-		SWIFTLog(managedObjectContext.hasChanges)
+	func saveContext () {	FXDLog_Func()
+		FXDLog(managedObjectContext.hasChanges)
 
 		if managedObjectContext.hasChanges {
 			do {
