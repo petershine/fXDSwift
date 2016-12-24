@@ -75,6 +75,8 @@ class FXDmoduleFacebook: NSObject {
 		}
 
 
+		let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+		loginManager.loginBehavior = FBSDKLoginBehavior.systemAccount
 
 
 		let login: FBSDKLoginManager = FBSDKLoginManager()
