@@ -41,15 +41,16 @@ class FXDmoduleFacebook: NSObject {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
 	}()
 
+	/*
 	lazy var multiAccountArray: Array<Any>? = {
 		return self.mainAccountStore.accounts(with:self.mainAccountType)
 
 	}()
+*/
 
-	lazy var currentFacebookAccount: Dictionary? = {
-		return UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
-	}()
+	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
 
+	var multiAccountArray: Array<Any>? = nil
 
 
 	deinit {	FXDLog_Func()
@@ -124,11 +125,6 @@ class FXDmoduleFacebook: NSObject {
 		FXDLog(self.multiAccountArray)
 
 
-		func PresentActionSheet() {
-			//TODO:
-		}
-
-
 		/*
 		if ((self.multiAccountArray?.count)! > 0) {
 			PresentActionSheet()
@@ -183,10 +179,68 @@ class FXDmoduleFacebook: NSObject {
 						FXDLog(collectedAccounts)
 
 
-						callback(error == nil, collectedAccounts)
+						self.multiAccountArray = collectedAccounts
+
+
+						self.PresentActionSheetWith(accounts: collectedAccounts, presentingScene: presentingScene, callback: callback)
 				})
 		})
 	}
 
+	public func PresentActionSheetWith(accounts:Array<Any>, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
+		FXDLog(accounts)
+		FXDLog(presentingScene)
+		FXDLog(self.multiAccountArray)
+
+
+		let actionsheetTitle = NSLocalizedString("Please select your Facebook Timeline or Page", comment:"")
+
+
+		let alertController:FXDAlertController = FXDAlertController(title: actionsheetTitle, message: nil, preferredStyle: .actionSheet)
+
+		let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { (action:UIAlertAction) in
+
+			//TODO: Should delete multiAccountArray?
+			self.multiAccountArray = nil
+
+			callback(false, NSNull())
+		}
+
+		let signOutAction = UIAlertAction(title: NSLocalizedString("Sign Out", comment: ""), style: .destructive) { (action:UIAlertAction) in
+
+			//TODO: resetCredential: Sign Out
+			self.multiAccountArray = nil
+
+			callback(false, NSNull())
+		}
+
+		alertController.addAction(cancelAction)
+		alertController.addAction(signOutAction)
+
+
+		for account in accounts {
+			let buttonTitle: String = (account as! Dictionary<String, Any>)["id"] as! String
+
+			let selectAction = UIAlertAction(title: buttonTitle, style: .default, handler: { (action:UIAlertAction) in
+
+				let accountObjKey = userdefaultObjMainFacebookAccountIdentifier
+
+				//TODO: save to userDefaults
+
+				self.currentFacebookAccount = account as! Dictionary
+
+				callback(true, account)
+			})
+
+			alertController.addAction(selectAction)
+
+		}
+
+
+
+		presentingScene.present(alertController, animated: true, completion: nil)
+
+		callback(true, NSNull())
+	}
 }
