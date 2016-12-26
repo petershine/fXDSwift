@@ -140,19 +140,8 @@ class FXDmoduleFacebook: NSObject {
 		FXDLog(self.multiAccountArray)
 
 
-		/*
-		if ((self.multiAccountArray?.count)! > 0) {
-			PresentActionSheet()
-			callback(true, NSNull())
-			return
-		}
-*/
-
-
 		//FBSDKLog: starting with Graph API v2.4, GET requests for /me/accounts should contain an explicit "fields" parameter
 		//https://developers.facebook.com/docs/graph-api/reference/user/
-
-		var collectedAccounts: Array<Any> = []
 
 		let graphRequestMe = FBSDKGraphRequest.init(
 			graphPath: facebookGraphMe,
@@ -162,52 +151,59 @@ class FXDmoduleFacebook: NSObject {
 			graphPath: facebookGraphMeAccounts,
 			parameters: ["fields": "data"])
 
-		graphRequestMe?.start(
-			completionHandler:
-			{ (requestConnection:FBSDKGraphRequestConnection?,
+
+
+		var collectedAccounts: Array<Any> = []
+
+		let connection = FBSDKGraphRequestConnection()
+
+		connection.add(graphRequestMe)
+		{ (requested:FBSDKGraphRequestConnection?,
+			result:Any?,
+			error:Error?) in
+
+			FXDLog((result as Any?))
+			FXDLog(error)
+
+			collectedAccounts.append(result as Any)
+			FXDLog(collectedAccounts)
+
+
+			connection.add(graphRequestAccounts)
+			{ (requested:FBSDKGraphRequestConnection?,
 				result:Any?,
 				error:Error?) in
-
 
 				FXDLog((result as Any?))
 				FXDLog(error)
 
-				collectedAccounts.append(result as Any)
+
+				let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
+				FXDLog(accounts as Any?)
+
+				collectedAccounts.append(accounts)
+
 				FXDLog(collectedAccounts)
 
 
-				graphRequestAccounts?.start(
-					completionHandler:
-					{ (requestCOnnection:FBSDKGraphRequestConnection?,
-						result:Any?,
-						error:Error?) in
+				self.multiAccountArray = collectedAccounts
 
 
-						FXDLog((result as Any?))
-						FXDLog(error)
+				self.presentActionSheetWith(
+					accounts: collectedAccounts,
+					presentingScene: presentingScene,
+					callback: callback)
 
+			}
 
-						let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
-						FXDLog(accounts as Any?)
+			connection.start()
 
-						for account in accounts {
-							collectedAccounts.append(account)
-						}
-						FXDLog(collectedAccounts)
+		}
 
-
-						self.multiAccountArray = collectedAccounts
-
-
-						self.PresentActionSheetWith(
-							accounts: collectedAccounts,
-							presentingScene: presentingScene,
-							callback: callback)
-				})
-		})
+		connection.start()
 	}
 
-	public func PresentActionSheetWith(accounts:Array<Any>, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
+	public func presentActionSheetWith(accounts:Array<Any>, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(accounts)
 		FXDLog(presentingScene)
@@ -226,9 +222,6 @@ class FXDmoduleFacebook: NSObject {
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel)
 		{ (action:UIAlertAction) in
-
-			//TODO: Should delete multiAccountArray?
-			self.multiAccountArray = nil
 
 			callback(false, NSNull())
 		}
@@ -257,11 +250,12 @@ class FXDmoduleFacebook: NSObject {
 				handler:
 				{ (action:UIAlertAction) in
 
-					let accountObjKey = userdefaultObjMainFacebookAccountIdentifier
+					UserDefaults.standard.set(
+						account,
+						forKey: userdefaultObjMainFacebookAccountIdentifier)
 
-					//TODO: save to userDefaults
 
-					self.currentFacebookAccount = account as! Dictionary
+					self.currentFacebookAccount = account as? Dictionary
 
 					callback(true, account)
 			})
