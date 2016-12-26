@@ -282,7 +282,9 @@ class FXDmoduleFacebook: NSObject {
 
 
 		for account in accounts! {
-			let buttonTitle: String = (account as! Dictionary<String, Any>)["id"] as! String
+			var buttonTitle: String = (account as! Dictionary<String, Any>)["category"] as! String
+			buttonTitle.append(": ")
+			buttonTitle.append((account as! Dictionary<String, Any>)["name"] as! String)
 
 			let selectAction = UIAlertAction(
 				title: buttonTitle,
@@ -322,6 +324,7 @@ extension FXDmoduleFacebook: FBSDKGraphRequestConnectionDelegate {
 	}
 
 	func requestConnection(_ connection: FBSDKGraphRequestConnection!, didFailWithError error: Error!) {	FXDLog_Func()
+		FXDLog(error)
 
 		self.batchFinishedClosure?(false)
 		self.batchFinishedClosure = nil
