@@ -136,18 +136,18 @@ class FXDmoduleFacebook: NSObject {
 
 		FXDLog(typeIdentifier)
 		FXDLog(presentingScene)
-		FXDLog(Bool(FBSDKAccessToken.current() != nil))
+		FXDLog(FBSDKAccessToken.current() != nil)
 		FXDLog(self.multiAccountArray)
 
 
 		//FBSDKLog: starting with Graph API v2.4, GET requests for /me/accounts should contain an explicit "fields" parameter
 		//https://developers.facebook.com/docs/graph-api/reference/user/
 
-		let graphRequestMe = FBSDKGraphRequest.init(
+		let graphRequestMe = FBSDKGraphRequest(
 			graphPath: facebookGraphMe,
 			parameters: ["fields": "id, name"])
 
-		let graphRequestAccounts = FBSDKGraphRequest.init(
+		let graphRequestAccounts = FBSDKGraphRequest(
 			graphPath: facebookGraphMeAccounts,
 			parameters: ["fields": "data"])
 
@@ -155,21 +155,8 @@ class FXDmoduleFacebook: NSObject {
 
 		var collectedAccounts: Array<Any> = []
 
-		let connection = FBSDKGraphRequestConnection()
-
-		connection.add(graphRequestMe)
-		{ (requested:FBSDKGraphRequestConnection?,
-			result:Any?,
-			error:Error?) in
-
-			FXDLog((result as Any?))
-			FXDLog(error)
-
-			collectedAccounts.append(result as Any)
-			FXDLog(collectedAccounts)
-
-
-			connection.add(graphRequestAccounts)
+		_ = graphRequestMe?.start(
+			completionHandler:
 			{ (requested:FBSDKGraphRequestConnection?,
 				result:Any?,
 				error:Error?) in
@@ -177,30 +164,37 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog((result as Any?))
 				FXDLog(error)
 
-
-				let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
-				FXDLog(accounts as Any?)
-
-				collectedAccounts.append(accounts)
-
+				collectedAccounts.append(result as Any)
 				FXDLog(collectedAccounts)
 
 
-				self.multiAccountArray = collectedAccounts
+				_ = graphRequestAccounts?.start(
+					completionHandler:
+					{ (requested:FBSDKGraphRequestConnection?,
+						result:Any?,
+						error:Error?) in
+
+						FXDLog((result as Any?))
+						FXDLog(error)
 
 
-				self.presentActionSheetWith(
-					accounts: collectedAccounts,
-					presentingScene: presentingScene,
-					callback: callback)
+						let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
+						FXDLog(accounts as Any?)
 
-			}
+						collectedAccounts.append(contentsOf: accounts)
 
-			connection.start()
+						FXDLog(collectedAccounts)
 
-		}
 
-		connection.start()
+						self.multiAccountArray = collectedAccounts
+
+
+						self.presentActionSheetWith(
+							accounts: collectedAccounts,
+							presentingScene: presentingScene,
+							callback: callback)
+				})
+		})
 	}
 
 	public func presentActionSheetWith(accounts:Array<Any>, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
