@@ -52,9 +52,7 @@ class FXDmoduleFacebook: NSObject {
 
 	var multiAccountArray: Array<Any>?
 
-	var collectedPages: Array<Any>?
-
-	var batchFinishedClosure:((Bool?, Array<Any>?) -> Void)?
+	var batchFinishedClosure:((Bool?) -> Void)?
 
 
 	deinit {	FXDLog_Func()
@@ -171,7 +169,7 @@ class FXDmoduleFacebook: NSObject {
 				var modified = result as! Dictionary<String, Any>
 				modified["category"] = "TIMELINE"
 
-				self.multiAccountArray!.append(modified as Any)
+				self.multiAccountArray?.append(modified as Any)
 				FXDLog(self.multiAccountArray)
 
 
@@ -190,7 +188,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-						self.collectedPages = []
+						var collectedPages: Array<Any> = []
 
 						let batchConnection = FBSDKGraphRequestConnection()
 						batchConnection.delegate = self
@@ -215,17 +213,17 @@ class FXDmoduleFacebook: NSObject {
 									var modified = result as! Dictionary<String, Any>
 									modified["category"] = "PAGE"
 
-									self.collectedPages!.append(modified as Any)
+									collectedPages.append(modified as Any)
 							})
 						}
 
 
-						self.batchFinishedClosure = { (shouldContinue:Bool?, accounts:Array<Any>?) in
+						self.batchFinishedClosure = { (shouldContinue:Bool?) in
 
 							FXDLog(shouldContinue)
-							FXDLog(accounts)
 
 							FXDLog(self.multiAccountArray)
+							FXDLog(collectedPages)
 
 							guard shouldContinue == true else {
 								callback(false, NSNull())
@@ -233,8 +231,10 @@ class FXDmoduleFacebook: NSObject {
 							}
 
 
+							self.multiAccountArray?.append(contentsOf: collectedPages)
+
 							self.presentActionSheetWith(
-								accounts: self.multiAccountArray!,
+								accounts: self.multiAccountArray,
 								presentingScene: presentingScene,
 								callback: callback)
 						}
@@ -244,7 +244,7 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 
-	public func presentActionSheetWith(accounts:Array<Any>, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
+	public func presentActionSheetWith(accounts:Array<Any>?, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(accounts)
 		FXDLog(presentingScene)
@@ -281,7 +281,7 @@ class FXDmoduleFacebook: NSObject {
 		alertController.addAction(signOutAction)
 
 
-		for account in accounts {
+		for account in accounts! {
 			let buttonTitle: String = (account as! Dictionary<String, Any>)["id"] as! String
 
 			let selectAction = UIAlertAction(
@@ -316,22 +316,14 @@ class FXDmoduleFacebook: NSObject {
 extension FXDmoduleFacebook: FBSDKGraphRequestConnectionDelegate {
 
 	func requestConnectionDidFinishLoading(_ connection: FBSDKGraphRequestConnection!) {	FXDLog_Func()
-		FXDLog(self.multiAccountArray)
-		FXDLog(self.collectedPages)
-		FXDLog(self.batchFinishedClosure)
 
-		self.multiAccountArray!.append(contentsOf: self.collectedPages!)
-
-		self.batchFinishedClosure!(true, self.multiAccountArray!)
+		self.batchFinishedClosure?(true)
 		self.batchFinishedClosure = nil
 	}
 
 	func requestConnection(_ connection: FBSDKGraphRequestConnection!, didFailWithError error: Error!) {	FXDLog_Func()
-		FXDLog(self.multiAccountArray)
-		FXDLog(self.collectedPages)
-		FXDLog(self.batchFinishedClosure)
 
-		self.batchFinishedClosure!(false, nil)
+		self.batchFinishedClosure?(false)
 		self.batchFinishedClosure = nil
 	}
 }
