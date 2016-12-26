@@ -50,7 +50,11 @@ class FXDmoduleFacebook: NSObject {
 
 	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
 
-	var multiAccountArray: Array<Any>? = nil
+	var multiAccountArray: Array<Any>?
+
+	var collectedPages: Array<Any>?
+
+	var batchFinishedClosure:((Bool?, Array<Any>?) -> Void)?
 
 
 	deinit {	FXDLog_Func()
@@ -153,7 +157,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-		var collectedAccounts: Array<Any> = []
+		self.multiAccountArray = []
 
 		_ = graphRequestMe?.start(
 			completionHandler:
@@ -164,8 +168,11 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog((result as Any?))
 				FXDLog(error)
 
-				collectedAccounts.append(result as Any)
-				FXDLog(collectedAccounts)
+				var modified = result as! Dictionary<String, Any>
+				modified["category"] = "TIMELINE"
+
+				self.multiAccountArray!.append(modified as Any)
+				FXDLog(self.multiAccountArray)
 
 
 				_ = graphRequestAccounts?.start(
@@ -181,18 +188,58 @@ class FXDmoduleFacebook: NSObject {
 						let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
 						FXDLog(accounts as Any?)
 
-						collectedAccounts.append(contentsOf: accounts)
-
-						FXDLog(collectedAccounts)
 
 
-						self.multiAccountArray = collectedAccounts
+						self.collectedPages = []
+
+						let batchConnection = FBSDKGraphRequestConnection()
+						batchConnection.delegate = self
+
+						for account in accounts {
+							let facebookGraphPage: String = (account as! Dictionary<String, Any>)["id"] as! String
+
+							let graphRequestPage = FBSDKGraphRequest(
+								graphPath: facebookGraphPage,
+								parameters: ["fields": "id, name"])
+
+							batchConnection.add(
+								graphRequestPage,
+								completionHandler:
+								{ (requested:FBSDKGraphRequestConnection?,
+									result:Any?,
+									error:Error?) in
+
+									FXDLog((result as Any?))
+									FXDLog(error)
+
+									var modified = result as! Dictionary<String, Any>
+									modified["category"] = "PAGE"
+
+									self.collectedPages!.append(modified as Any)
+							})
+						}
 
 
-						self.presentActionSheetWith(
-							accounts: collectedAccounts,
-							presentingScene: presentingScene,
-							callback: callback)
+						self.batchFinishedClosure = { (shouldContinue:Bool?, accounts:Array<Any>?) in
+
+							FXDLog(shouldContinue)
+							FXDLog(accounts)
+
+							FXDLog(self.multiAccountArray)
+
+							guard shouldContinue == true else {
+								callback(false, NSNull())
+								return
+							}
+
+
+							self.presentActionSheetWith(
+								accounts: self.multiAccountArray!,
+								presentingScene: presentingScene,
+								callback: callback)
+						}
+
+						batchConnection.start()
 				})
 		})
 	}
@@ -226,7 +273,6 @@ class FXDmoduleFacebook: NSObject {
 		{ (action:UIAlertAction) in
 
 			//TODO: resetCredential: Sign Out
-			self.multiAccountArray = nil
 
 			callback(true, NSNull())
 		}
@@ -264,5 +310,28 @@ class FXDmoduleFacebook: NSObject {
 			alertController,
 			animated: true,
 			completion: nil)
+	}
+}
+
+extension FXDmoduleFacebook: FBSDKGraphRequestConnectionDelegate {
+
+	func requestConnectionDidFinishLoading(_ connection: FBSDKGraphRequestConnection!) {	FXDLog_Func()
+		FXDLog(self.multiAccountArray)
+		FXDLog(self.collectedPages)
+		FXDLog(self.batchFinishedClosure)
+
+		self.multiAccountArray!.append(contentsOf: self.collectedPages!)
+
+		self.batchFinishedClosure!(true, self.multiAccountArray!)
+		self.batchFinishedClosure = nil
+	}
+
+	func requestConnection(_ connection: FBSDKGraphRequestConnection!, didFailWithError error: Error!) {	FXDLog_Func()
+		FXDLog(self.multiAccountArray)
+		FXDLog(self.collectedPages)
+		FXDLog(self.batchFinishedClosure)
+
+		self.batchFinishedClosure!(false, nil)
+		self.batchFinishedClosure = nil
 	}
 }
