@@ -65,6 +65,7 @@ class FXDmoduleFacebook: NSObject {
 		FXDLog(presentingScene)
 		FXDLog(FBSDKAccessToken.current() != nil)
 
+
 		guard (FBSDKAccessToken.current() == nil)
 			else {
 				self.showActionSheetFor(
@@ -105,10 +106,8 @@ class FXDmoduleFacebook: NSObject {
 		{ (result:FBSDKLoginManagerLoginResult?,
 			error:Error?) in
 
-
-			FXDLog(result?.description)
+			FXDLog(result)
 			FXDLog(error)
-
 
 			FXDLog(result?.token.appID)
 			FXDLog(result?.token.expirationDate)
@@ -119,7 +118,13 @@ class FXDmoduleFacebook: NSObject {
 			FXDLog(result?.grantedPermissions.description)
 			FXDLog(result?.declinedPermissions.description)
 
-			FXDLog(result?.isCancelled == false)
+			FXDLog(result?.isCancelled)
+
+			guard result?.isCancelled == false
+			else {
+				callback(false, NSNull())
+				return
+			}
 
 
 			self.showActionSheetFor(
@@ -141,17 +146,12 @@ class FXDmoduleFacebook: NSObject {
 		//FBSDKLog: starting with Graph API v2.4, GET requests for /me/accounts should contain an explicit "fields" parameter
 		//https://developers.facebook.com/docs/graph-api/reference/user/
 
+
+		self.multiAccountArray = []
+
 		let graphRequestMe = FBSDKGraphRequest(
 			graphPath: facebookGraphMe,
 			parameters: ["fields": "id, name"])
-
-		let graphRequestAccounts = FBSDKGraphRequest(
-			graphPath: facebookGraphMeAccounts,
-			parameters: ["fields": "data"])
-
-
-
-		self.multiAccountArray = []
 
 		_ = graphRequestMe?.start(
 			completionHandler:
@@ -162,15 +162,23 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog((result as Any?))
 				FXDLog(error)
 
+				guard error == nil
+					else {
+						callback(false, NSNull())
+						return
+				}
+
+
 				var modified = result as! Dictionary<String, Any>
 				modified["category"] = "TIMELINE"
-
-				//If you have a Facebook page with a URL like this: https://www.facebook.com/smashballoon then the Page ID is just smashballoon.
-				modified["id"] = "me"	//https://smashballoon.com/custom-facebook-feed/id/
 
 				self.multiAccountArray?.append(modified as Any)
 				FXDLog(self.multiAccountArray)
 
+
+				let graphRequestAccounts = FBSDKGraphRequest(
+					graphPath: facebookGraphMeAccounts,
+					parameters: ["fields": "data"])
 
 				_ = graphRequestAccounts?.start(
 					completionHandler:
@@ -181,10 +189,15 @@ class FXDmoduleFacebook: NSObject {
 						FXDLog((result as Any?))
 						FXDLog(error)
 
+						guard error == nil
+							else {
+								callback(false, NSNull())
+								return
+						}
+
 
 						let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
 						FXDLog(accounts as Any?)
-
 
 
 						var collectedPages: Array<Any> = []
@@ -209,10 +222,12 @@ class FXDmoduleFacebook: NSObject {
 									FXDLog((result as Any?))
 									FXDLog(error)
 
-									var modified = result as! Dictionary<String, Any>
-									modified["category"] = "PAGE"
+									if error == nil {
+										var modified = result as! Dictionary<String, Any>
+										modified["category"] = "PAGE"
 
-									collectedPages.append(modified as Any)
+										collectedPages.append(modified as Any)
+									}
 							})
 						}
 
@@ -310,8 +325,11 @@ class FXDmoduleFacebook: NSObject {
 
 		presentingScene.present(
 			alertController,
-			animated: true,
-			completion: nil)
+			animated: true) {
+
+				(UIApplication.mainWindow() as! FXDWindow).hideInformationView(afterDelay: (1.0/4.0))	//delayQuarterSecond
+
+		}
 	}
 
 
@@ -352,6 +370,7 @@ class FXDmoduleFacebook: NSObject {
 
 			FXDLog(graphRequestPost)
 
+			//message = "(#200) Insufficient permission to post to target on behalf of the viewer";
 			_ = graphRequestPost?.start(
 				completionHandler:
 				{ (requested:FBSDKGraphRequestConnection?,
