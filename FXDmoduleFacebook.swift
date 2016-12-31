@@ -323,13 +323,11 @@ class FXDmoduleFacebook: NSObject {
 		
 		
 
+		(UIApplication.mainWindow() as! FXDWindow).hideInformationView(afterDelay: (1.0/4.0))	//delayQuarterSecond
+
 		presentingScene.present(
 			alertController,
-			animated: true) {
-
-				(UIApplication.mainWindow() as! FXDWindow).hideInformationView(afterDelay: (1.0/4.0))	//delayQuarterSecond
-
-		}
+			animated: true)
 	}
 
 
