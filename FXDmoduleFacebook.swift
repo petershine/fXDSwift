@@ -41,12 +41,6 @@ class FXDmoduleFacebook: NSObject {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
 	}()
 
-	/*
-	lazy var multiAccountArray: Array<Any>? = {
-		return self.mainAccountStore.accounts(with:self.mainAccountType)
-
-	}()
-*/
 
 	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
 
@@ -64,7 +58,8 @@ class FXDmoduleFacebook: NSObject {
 	}
 
 
-	@objc public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
+	@objc
+	public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(typeIdentifier)
 		FXDLog(presentingScene)
@@ -134,7 +129,8 @@ class FXDmoduleFacebook: NSObject {
 		}
 	}
 
-	@objc public func showActionSheetFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
+	@objc
+	public func showActionSheetFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(typeIdentifier)
 		FXDLog(presentingScene)
@@ -168,6 +164,9 @@ class FXDmoduleFacebook: NSObject {
 
 				var modified = result as! Dictionary<String, Any>
 				modified["category"] = "TIMELINE"
+
+				//If you have a Facebook page with a URL like this: https://www.facebook.com/smashballoon then the Page ID is just smashballoon.
+				modified["id"] = "me"	//https://smashballoon.com/custom-facebook-feed/id/
 
 				self.multiAccountArray?.append(modified as Any)
 				FXDLog(self.multiAccountArray)
