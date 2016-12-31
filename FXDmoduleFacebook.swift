@@ -294,6 +294,7 @@ class FXDmoduleFacebook: NSObject {
 					UserDefaults.standard.set(
 						account,
 						forKey: userdefaultObjMainFacebookAccountIdentifier)
+					UserDefaults.standard.synchronize()
 
 
 					self.currentFacebookAccount = account as? Dictionary
@@ -334,7 +335,7 @@ class FXDmoduleFacebook: NSObject {
 			FXDLog(optionalPlaceId)
 
 
-			let facebookId = self.currentFacebookAccount?["id"]
+			let facebookId:String = self.currentFacebookAccount?["id"] as! String
 			let graphPath = "\(facebookId)/feed"
 			FXDLog(graphPath)
 
@@ -360,7 +361,7 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog((result as Any?))
 				FXDLog(error)
 
-				callback(error != nil, NSNull())
+				callback(error == nil, result as Any)
 			})
 
 		}
