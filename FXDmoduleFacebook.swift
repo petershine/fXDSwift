@@ -313,20 +313,125 @@ class FXDmoduleFacebook: NSObject {
 			animated: true,
 			completion: nil)
 	}
+
+
+
+	@objc public func requestToPostWith(message:String, mediaLink:String, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping finishedClosure) {	FXDLog_Func()
+
+		self.requestSearchWith(
+			latitude: latitude,
+			longitude: longitude)
+		{ (shouldContinue:Bool,
+			placeId:Any) in
+
+			FXDLog(shouldContinue)
+
+
+			let optionalMediaLink:String? = mediaLink
+			let optionalPlaceId:String? = placeId as? String
+
+			FXDLog(message)
+			FXDLog(optionalMediaLink)
+			FXDLog(optionalPlaceId)
+
+
+			let facebookId = self.currentFacebookAccount?["id"]
+			let graphPath = "\(facebookId)/feed"
+			FXDLog(graphPath)
+
+			var parameters = ["message":message]
+			if optionalMediaLink != nil {parameters["link"] = optionalMediaLink}
+			if optionalPlaceId != nil {parameters["place"] = optionalPlaceId}
+			FXDLog(parameters)
+
+
+			let graphRequestPost = FBSDKGraphRequest(
+				graphPath: graphPath,
+				parameters: parameters,
+				httpMethod: "POST")
+
+			FXDLog(graphRequestPost)
+
+			_ = graphRequestPost?.start(
+				completionHandler:
+				{ (requested:FBSDKGraphRequestConnection?,
+					result:Any?,
+					error:Error?) in
+
+				FXDLog((result as Any?))
+				FXDLog(error)
+
+				callback(error != nil, NSNull())
+			})
+
+		}
+	}
+
+	public func requestSearchWith(latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping finishedClosure) {	FXDLog_Func()
+
+		FXDLog(longitude)
+		FXDLog(latitude)
+
+		guard (latitude != 0.0 && longitude != 0.0)
+			else {
+				callback(false, NSNull())
+				return
+		}
+
+
+		let graphRequestSearch = FBSDKGraphRequest(
+			graphPath: "search",
+			parameters: ["type": "place",
+			             "center":String("\(latitude),\(longitude)") ?? "",
+			             "distance":String("\(kCLLocationAccuracyKilometer)") ?? ""])
+		FXDLog(graphRequestSearch)
+
+		_ = graphRequestSearch?.start(
+			completionHandler:
+			{ (requested:FBSDKGraphRequestConnection?,
+				result:Any?,
+				error:Error?) in
+
+				FXDLog((result as Any?))
+				FXDLog(error)
+
+				let places: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
+				FXDLog(places as Any?)
+
+				var placeId:String? = nil
+
+				for place in places {
+					placeId = (place as! Dictionary<String, Any>)["id"] as? String
+
+					if placeId != nil {
+						break
+					}
+				}
+
+				callback(placeId != nil, placeId as Any)
+		})
+	}
 }
+
+
+
 
 extension FXDmoduleFacebook: FBSDKGraphRequestConnectionDelegate {
 
 	func requestConnectionDidFinishLoading(_ connection: FBSDKGraphRequestConnection!) {	FXDLog_Func()
 
+		assert(self.batchFinishedClosure != nil)
 		self.batchFinishedClosure?(true)
 		self.batchFinishedClosure = nil
+		assert(self.batchFinishedClosure == nil)
 	}
 
 	func requestConnection(_ connection: FBSDKGraphRequestConnection!, didFailWithError error: Error!) {	FXDLog_Func()
 		FXDLog(error)
 
+		assert(self.batchFinishedClosure != nil)
 		self.batchFinishedClosure?(false)
 		self.batchFinishedClosure = nil
+		assert(self.batchFinishedClosure == nil)
 	}
 }
