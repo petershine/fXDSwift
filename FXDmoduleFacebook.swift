@@ -58,7 +58,7 @@ class FXDmoduleFacebook: NSObject {
 	}
 
 
-	@objc
+
 	public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(typeIdentifier)
@@ -134,7 +134,7 @@ class FXDmoduleFacebook: NSObject {
 		}
 	}
 
-	@objc
+
 	public func showActionSheetFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping finishedClosure) {	FXDLog_Func()
 
 		FXDLog(typeIdentifier)
@@ -332,7 +332,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	@objc public func requestToPostWith(message:String, mediaLink:String, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping finishedClosure) {	FXDLog_Func()
+	public func requestAccountsWith(presentingScene: UIViewController, callback:@escaping finishedClosure) {	FXDLog_Func()
 
 		self.requestSearchWith(
 			latitude: latitude,
