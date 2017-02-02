@@ -13,6 +13,10 @@ import Foundation
 import Social
 import Accounts
 
+import FBSDKCoreKit
+import FBSDKLoginKit
+import FBSDKShareKit
+
 
 @objc
 class FXDmoduleFacebook: NSObject {
