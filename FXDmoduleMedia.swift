@@ -6,7 +6,7 @@ import Foundation
 import MediaPlayer
 
 
-class FXDmoduleMedia: NSObject {
+@objc public class FXDmoduleMedia: NSObject {
 
 	lazy var musicPlayer: MPMusicPlayerController = {
 		return MPMusicPlayerController.systemMusicPlayer()
@@ -20,12 +20,14 @@ class FXDmoduleMedia: NSObject {
 
 
 	func startObservingMediaNotifications() {	FXDLog_Func()
+
 		//MARK: Can't use mediaModule for simulator
 		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
 		if TARGET_OS_SIMULATOR != 0 {
 			return
 		}
 
+		//MARK: This app has crashed because it attempted to access privacy-sensitive data without a usage description.  The app's Info.plist must contain an NSAppleMusicUsageDescription key with a string value explaining to the user how the app uses this data.
 
 		NotificationCenter.default
 			.addObserver(self,

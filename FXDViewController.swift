@@ -1,14 +1,10 @@
-//
-//  FXDViewController.swift
-//  poptoo2017
-//
-//  Created by petershine on 2/6/17.
-//  Copyright © 2017 fXceed. All rights reserved.
-//
+
 
 import UIKit
 import Foundation
 
+
+@objc
 class FXDViewController: UIViewController {
 
 	override func didReceiveMemoryWarning() {	FXDLog_SEPARATE()

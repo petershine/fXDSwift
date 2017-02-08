@@ -7,12 +7,12 @@ import CoreLocation
 import MapKit
 
 
-class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
+@objc public class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	var didStartLocationManager : Bool = false
 	
 	var mainLocationManager : CLLocationManager?
-	var lastLocation: CLLocation?
+	public var lastLocation: CLLocation?
 
 
 	deinit {	FXDLog_Func()
@@ -101,7 +101,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 	}
 
 
-	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
+	public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
 		FXDLog(String(status.rawValue))
 
@@ -114,7 +114,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
 		lastLocation = locations.last
 		FXDLog(lastLocation)

@@ -4,6 +4,7 @@ import UIKit
 import CoreData
 
 
+@objc
 class FXDAppDelegate: UIResponder, UIApplicationDelegate {
 
 	//MARK: The app delegate must implement the window property if it wants to use a main storyboard file.
