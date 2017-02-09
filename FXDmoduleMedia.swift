@@ -5,8 +5,14 @@ import Foundation
 
 import MediaPlayer
 
+import ReactiveSwift
+import ReactiveCocoa
+import Result
+
 
 @objc public class FXDmoduleMedia: NSObject {
+
+	public let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
 
 	lazy var musicPlayer: MPMusicPlayerController = {
 		return MPMusicPlayerController.systemMusicPlayer()
@@ -21,7 +27,7 @@ import MediaPlayer
 
 	func startObservingMediaNotifications() {	FXDLog_Func()
 
-		//MARK: Can't use mediaModule for simulator
+		//MARK: Intentional. Can't use mediaModule for simulator after all
 		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
 		if TARGET_OS_SIMULATOR != 0 {
 			return
@@ -59,6 +65,8 @@ import MediaPlayer
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 		FXDLog(self.musicPlayer.nowPlayingItem?.title)
+
+		self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {

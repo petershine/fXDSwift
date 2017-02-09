@@ -6,8 +6,14 @@ import Foundation
 import CoreLocation
 import MapKit
 
+import ReactiveSwift
+import ReactiveCocoa
+import Result
+
 
 @objc public class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
+
+	public let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation, NoError>.pipe()
 
 	var didStartLocationManager : Bool = false
 	
@@ -116,8 +122,10 @@ import MapKit
 
 	public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
-		lastLocation = locations.last
-		FXDLog(lastLocation)
+		self.lastLocation = locations.last
+		FXDLog(self.lastLocation)
+
+		self.lastLocationObserver.send(value: self.lastLocation!)
 	}
 
 
