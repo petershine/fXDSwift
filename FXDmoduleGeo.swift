@@ -40,6 +40,16 @@ import Result
 		mainLocationManager = CLLocationManager()
 		mainLocationManager?.delegate = self
 		mainLocationManager?.distanceFilter = 100
+
+		mainLocationManager?.pausesLocationUpdatesAutomatically = false
+		/*
+		*      With UIBackgroundModes set to include "location" in Info.plist, you must
+		*      also set this property to YES at runtime whenever calling
+		*      -startUpdatingLocation with the intent to continue in the background.
+		*
+		*      Setting this property to YES when UIBackgroundModes does not include
+		*      "location" is a fatal error.
+		*/
 		mainLocationManager?.allowsBackgroundLocationUpdates = true
 
 
