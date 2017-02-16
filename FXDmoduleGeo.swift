@@ -132,10 +132,16 @@ import Result
 
 	public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
-		self.lastLocation = locations.last
-		FXDLog(self.lastLocation)
+		/*
+		if (self.lastLocation == nil ||
+			(locations.last?.distance(from: self.lastLocation!))! > 10.0 as CLLocationDistance) {
+*/
 
-		self.lastLocationObserver.send(value: self.lastLocation!)
+			self.lastLocation = locations.last
+			FXDLog(self.lastLocation)
+
+			self.lastLocationObserver.send(value: self.lastLocation!)
+//		}
 	}
 
 

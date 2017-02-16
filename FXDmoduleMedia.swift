@@ -17,6 +17,7 @@ import Result
 	lazy var musicPlayer: MPMusicPlayerController = {
 		return MPMusicPlayerController.systemMusicPlayer()
 	}()
+	public var lastMediaItem: MPMediaItem?
 
 
 	deinit {	FXDLog_Func()
@@ -64,9 +65,18 @@ import Result
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.nowPlayingItem?.title)
 
-		self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
+		FXDLog(self.musicPlayer.nowPlayingItem?.title)
+		FXDLog(self.lastMediaItem?.title)
+
+
+		if (self.lastMediaItem == nil || self.musicPlayer.nowPlayingItem?.title == self.lastMediaItem?.title) {
+
+			self.lastMediaItem = self.musicPlayer.nowPlayingItem
+			FXDLog(self.lastMediaItem)
+
+			self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
+		}
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
