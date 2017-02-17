@@ -116,6 +116,20 @@ import Result
 		didStartLocationManager = false
 	}
 
+	func updatePlacemarks() {	FXDLog_Func()
+		let geocoder: CLGeocoder = CLGeocoder()
+
+		geocoder.reverseGeocodeLocation(
+		(self.mainLocationManager?.location)!) {
+			(placemarks, error) in
+
+			FXDLog(error)
+
+			FXDLog(placemarks)
+			
+		}
+	}
+
 
 	public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
