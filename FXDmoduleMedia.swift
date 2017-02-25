@@ -28,11 +28,12 @@ import Result
 
 	func startObservingMediaNotifications() {	FXDLog_Func()
 
-		//MARK: Intentional. Can't use mediaModule for simulator after all
+		//MARK: Intentional. Can't use mediaModule(musicPlayer) in simulator after all
 		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
-		if TARGET_OS_SIMULATOR != 0 {
+		guard TARGET_OS_SIMULATOR == 0 else {
 			return
 		}
+
 
 		//MARK: This app has crashed because it attempted to access privacy-sensitive data without a usage description.  The app's Info.plist must contain an NSAppleMusicUsageDescription key with a string value explaining to the user how the app uses this data.
 
@@ -70,13 +71,15 @@ import Result
 		FXDLog(self.lastMediaItem?.title)
 
 
+		/*
 		if (self.lastMediaItem == nil || self.musicPlayer.nowPlayingItem?.title == self.lastMediaItem?.title) {
+*/
 
-			self.lastMediaItem = self.musicPlayer.nowPlayingItem
-			FXDLog(self.lastMediaItem)
+			//self.lastMediaItem = self.musicPlayer.nowPlayingItem
+			//FXDLog(self.lastMediaItem)
 
 			self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
-		}
+//		}
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
