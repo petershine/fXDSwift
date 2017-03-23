@@ -1,6 +1,6 @@
 //
 //  FXDmoduleFacebook.swift
-//  PopToo
+//
 //
 //  Created by petershine on 12/22/16.
 //  Copyright © 2016 fXceed. All rights reserved.
@@ -102,7 +102,7 @@ class FXDmoduleFacebook: NSObject {
 		}
 */
 
-		//2016-12-24 00:39:05.516130 PopToo[10164:2443443] FBSDKLog: ** WARNING: You are requesting permissions inside the completion block of an existing login.This is unsupported behavior. You should request additional permissions only when they are needed, such as requesting for publish_actionswhen the user performs a sharing action.
+		//FBSDKLog: ** WARNING: You are requesting permissions inside the completion block of an existing login.This is unsupported behavior. You should request additional permissions only when they are needed, such as requesting for publish_actionswhen the user performs a sharing action.
 
 
 		loginManager.logIn(
