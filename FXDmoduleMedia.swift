@@ -21,7 +21,7 @@ import Result
 
 
 	deinit {	FXDLog_Func()
-		self.musicPlayer.endGeneratingPlaybackNotifications()
+		musicPlayer.endGeneratingPlaybackNotifications()
 		MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
 	}
 
@@ -78,6 +78,8 @@ import Result
 			//self.lastMediaItem = self.musicPlayer.nowPlayingItem
 			//FXDLog(self.lastMediaItem)
 
+
+			//MARK: It's responsibility of the developer to control repeated item
 			self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
 //		}
 	}

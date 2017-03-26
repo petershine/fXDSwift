@@ -22,7 +22,7 @@ import Result
 
 
 	deinit {	FXDLog_Func()
-		self.stopLocationManager(mainLocationManager)
+		stopLocationManager(mainLocationManager)
 	}
 
 
