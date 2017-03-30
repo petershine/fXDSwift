@@ -12,6 +12,10 @@ class FXDViewController: UIViewController {
 		// Dispose of any resources that can be recreated.
 	}
 
+	deinit {	FXDLog_SEPARATE()
+		//MARK: Useful for checking if this instance is correctly deleted
+	}
+
 
 	required init?(coder aDecoder: NSCoder) {	FXDLog_SEPARATE()
 		super.init(coder: aDecoder)
