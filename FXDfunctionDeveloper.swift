@@ -6,13 +6,13 @@ import Foundation
 
 func FXDLog(_ obj: Any?) {
 #if ForDEVELOPER
-	NSLog("\(obj)")
+	NSLog("\(String(describing: obj))")
 #endif
 }
 
 func FXDLog_Observed(_ obj: Any?) {
 #if ForDEVELOPER
-	NSLog("_Observed: \(obj)")
+	NSLog("_Observed: \(String(describing: obj))")
 #endif
 }
 
