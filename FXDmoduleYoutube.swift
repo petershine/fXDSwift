@@ -33,13 +33,13 @@ class FXDmoduleYoutube: NSObject {
 	}
 
 
-	func searchYouTubeUsing(artist:String, song:String, album:String, callback:@escaping finishedClosure) {	FXDLog_Func()
+	func searchYouTubeUsing(artist:String?, song:String?, album:String?, callback:@escaping finishedClosure) {	FXDLog_Func()
 
-		let queryText_0 = "\(artist) \(song) \(album)"
+		let queryText_0 = "\(artist!) \(song!) \(album!)"
 		FXDLog(queryText_0)
 
 		let percentEscaped = queryText_0.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-		let formattedString = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=\(percentEscaped)&key=\(self.apikeyGoogleForBrowser!)"
+		let formattedString = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=\(String(describing: percentEscaped))&key=\(self.apikeyGoogleForBrowser!)"
 		let request = URLRequest(url: URL(string: formattedString)!)
 		FXDLog(request)
 
@@ -51,22 +51,24 @@ class FXDmoduleYoutube: NSObject {
 			FXDLog(error)
 
 
-			var items:Array<Any>?
+			var results:Array<Any>?
 
 			do {
 				let jsonObject = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
 
-				items = (jsonObject as! Dictionary<String, Any>)["items"] as! Array<Any>;
+				results = (jsonObject as! Dictionary<String, Any>)["items"] as! Array<Any>;
 			}
 			catch {
 				//TODO
 			}
 
-			for item in items! {
+			for item in results! {
 				FXDLog(item)
 			}
 
-			callback(error == nil, items)
+			callback(error == nil, results)
 		}
+
+		searchTask.resume()
 	}
 }
