@@ -32,6 +32,13 @@ func FXDLog_SEPARATE(_ file: NSString = #file, function: NSString = #function) {
 }
 
 
+func FXDLog_OVERRIDE() {
+#if ForDEVELOPER
+	FXDLog("SHOULD OVERRIDE")
+#endif
+}
+
+
 
 //MARK: Closures
 //typedef void (^FXDcallbackFinish)(SEL caller, BOOL didFinish, id responseObj);
