@@ -154,7 +154,7 @@ class FXDmoduleTwitter: NSObject {
 
 		for account: ACAccount in self.multiAccountArray as! [ACAccount] {
 
-			let selectAction: UIAlertAction = UIAlertAction(title: String("@\(account.username)"), style: .default, handler: { (action: UIAlertAction) in
+			let selectAction: UIAlertAction = UIAlertAction(title: String("@\(account.username!)"), style: .default, handler: { (action: UIAlertAction) in
 
 				UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
 

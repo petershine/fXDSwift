@@ -116,14 +116,17 @@ class FXDmoduleFacebook: NSObject {
 			FXDLog(result)
 			FXDLog(error)
 
-			FXDLog(result?.token.appID)
-			FXDLog(result?.token.expirationDate)
-			FXDLog(result?.token.refreshDate)
-			FXDLog(result?.token.tokenString)
-			FXDLog(result?.token.userID)
+			if let receivedToken = result?.token {
+				FXDLog(receivedToken.appID)
+				FXDLog(receivedToken.expirationDate)
+				FXDLog(receivedToken.refreshDate)
+				FXDLog(receivedToken.tokenString)
+				FXDLog(receivedToken.userID)
+			}
 
-			FXDLog(result?.grantedPermissions.description)
-			FXDLog(result?.declinedPermissions.description)
+
+			FXDLog(result?.grantedPermissions?.description)
+			FXDLog(result?.declinedPermissions?.description)
 
 			FXDLog(result?.isCancelled)
 
