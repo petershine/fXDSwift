@@ -1,10 +1,3 @@
-//
-//  FXDmoduleFacebook.swift
-//
-//
-//  Created by petershine on 12/22/16.
-//  Copyright © 2016 fXceed. All rights reserved.
-//
 
 
 import UIKit
@@ -16,6 +9,13 @@ import Accounts
 import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
+
+
+//TODO: Prepare formatter function
+//#define urlrootFacebookAPI	@"https://graph.facebook.com/"
+//#define urlhostFacebookVideoGraph	@"https://graph-video.facebook.com/"
+//#define urlstringFacebook(method)	[NSString stringWithFormat:@"%@%@", urlrootFacebookAPI, method]
+//#define urlstringFacebookVideoGraph(method)	[NSString stringWithFormat:@"%@%@", urlhostFacebookVideoGraph, method]
 
 
 @objc
@@ -46,7 +46,7 @@ class FXDmoduleFacebook: NSObject {
 	}()
 
 
-	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey:userdefaultObjMainFacebookAccountIdentifier)
+	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
 
 	var multiAccountArray: Array<Any>?
 
