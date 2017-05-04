@@ -203,7 +203,7 @@ class FXDmoduleFacebook: NSObject {
 		let actionsheetTitle = NSLocalizedString("Please select your Facebook Timeline or Page", comment:"")
 
 
-		let alertController:FXDAlertController = FXDAlertController(
+		let alertController:UIAlertController = UIAlertController(
 			title: actionsheetTitle,
 			message: nil,
 			preferredStyle: .actionSheet)
