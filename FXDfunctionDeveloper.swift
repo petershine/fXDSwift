@@ -42,4 +42,4 @@ func FXDLog_OVERRIDE() {
 
 //MARK: Closures
 //typedef void (^FXDcallbackFinish)(SEL caller, BOOL didFinish, id responseObj);
-typealias finishedClosure = (Bool, Any) -> Void
+typealias FXDclosureFinished = (Bool, Any) -> Void
