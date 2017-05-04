@@ -278,7 +278,7 @@ class FXDmoduleTwitter: NSObject {
 				parameters[objkeyTwitterLong] = longitude
 			}
 
-			if (placeId?.characters.count)! > 0 {
+			if placeId != nil {
 				parameters[objkeyTwitterPlaceId] = placeId
 			}
 
