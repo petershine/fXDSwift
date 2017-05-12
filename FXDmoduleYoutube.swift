@@ -33,7 +33,7 @@ class FXDmoduleYoutube: NSObject {
 	}
 
 
-	func searchYouTubeUsing(artist:String?, song:String?, album:String?, callback:@escaping finishedClosure) {	FXDLog_Func()
+	func searchYouTubeUsing(artist:String?, song:String?, album:String?, callback:@escaping FXDclosureFinished) {	FXDLog_Func()
 
 		let query = "\(artist!) \(song!) \(album!)"
 		FXDLog(query)

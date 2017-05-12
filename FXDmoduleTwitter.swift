@@ -26,7 +26,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 	//TODO: Reconsider lazy updated variables
-	lazy var mainAccountType: ACAccountType = {
+	lazy var mainAccountType: ACAccountType? = {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
 	}()
 
@@ -38,7 +38,7 @@ class FXDmoduleTwitter: NSObject {
 
 		if let identifier: String = UserDefaults.standard.string(forKey: accountObjKey) {
 
-			if self.mainAccountType.accessGranted {
+			if (self.mainAccountType != nil && self.mainAccountType!.accessGranted) {
 				mainAccount = self.mainAccountStore.account(withIdentifier: identifier)
 				UserDefaults.standard.set(identifier, forKey: accountObjKey)
 			}
@@ -61,8 +61,6 @@ class FXDmoduleTwitter: NSObject {
 		return self.mainAccountStore.accounts(with:self.mainAccountType)
 	}()
 
-	var batchFinishedClosure:((Bool?) -> Void)?
-
 
 	deinit {	FXDLog_Func()
 
@@ -76,8 +74,8 @@ class FXDmoduleTwitter: NSObject {
 
 	public func signInBySelectingAccount(forTypeIdentifier typeIdentifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
 
-		FXDLog(self.mainAccountType.accountTypeDescription)
-		FXDLog(self.mainAccountType.accessGranted)
+		debugPrint(self.mainAccountType?.accountTypeDescription as Any)
+		debugPrint(self.mainAccountType?.accessGranted as Any)
 
 
 		func GrantedAccess() -> Void {
@@ -93,13 +91,14 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-		guard self.mainAccountType.accessGranted != true else {
+		guard self.mainAccountType?.accessGranted != true else {
 			GrantedAccess()
 			return
 		}
 
 
-		self.mainAccountStore.requestAccessToAccounts(with: self.mainAccountType, options: nil) { (granted: Bool, error: Error?) in
+		self.mainAccountStore.requestAccessToAccounts(with: self.mainAccountType, options: nil) {
+			(granted: Bool, error: Error?) in
 
 			DispatchQueue.main.async {
 				guard granted else {
@@ -113,7 +112,9 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDclosureFinished) {
+	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+
+		debugPrint(self.multiAccountArray)
 
 		guard self.multiAccountArray.count > 0 else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""), message: self.reasonForConnecting, cancelButtonTitle: nil, handler: nil)
@@ -121,31 +122,40 @@ class FXDmoduleTwitter: NSObject {
 			callback(false, NSNull())
 			return
 		}
+		
 
+		let alertController: UIAlertController = UIAlertController(
+			title: NSLocalizedString("Please select your Twitter Account", comment: ""),
+			message: nil,
+			preferredStyle: .actionSheet)
 
-		let alertController: UIAlertController = UIAlertController(title: NSLocalizedString("Please select your Twitter Account", comment: ""), message: nil, preferredStyle: .actionSheet)
+		let cancelAction: UIAlertAction = UIAlertAction(
+			title: NSLocalizedString("Cancel", comment: ""),
+			style: .cancel) {
+				(action: UIAlertAction) in
 
-		let cancelAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { (action: UIAlertAction) in
+				//TODO:
+				//multiAccountArray = nil
 
-			//TODO:
-			//multiAccountArray = nil
-
-			callback(false, NSNull())
+				callback(false, NSNull())
 		}
+		
+		
+		let signOutAction: UIAlertAction = UIAlertAction(
+			title: NSLocalizedString("Sign Out", comment: ""),
+			style: .destructive) {
+				(action: UIAlertAction) in
 
+				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
+				UserDefaults.standard.synchronize()
 
-		let signOutAction: UIAlertAction = UIAlertAction(title: NSLocalizedString("Sign Out", comment: ""), style: .destructive) { (action: UIAlertAction) in
+				//TODO:
+				self.currentMainAccount = nil
 
-			UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
-			UserDefaults.standard.synchronize()
+				//TODO:
+				//multiAccountArray = nil
 
-			//TODO:
-			self.currentMainAccount = nil
-
-			//TODO:
-			//multiAccountArray = nil
-
-			callback(true, NSNull())
+				callback(true, NSNull())
 		}
 
 		alertController.addAction(cancelAction)
@@ -154,19 +164,24 @@ class FXDmoduleTwitter: NSObject {
 
 		for account: ACAccount in self.multiAccountArray as! [ACAccount] {
 
-			let selectAction: UIAlertAction = UIAlertAction(title: String("@\(account.username!)"), style: .default, handler: { (action: UIAlertAction) in
+			let selectAction: UIAlertAction = UIAlertAction(
+				title: String("@\(account.username!)"),
+				style: .default,
+				handler: {
+					(action: UIAlertAction) in
 
-				UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
+					//TODO:
+					self.currentMainAccount = account
+					debugPrint(self.currentMainAccount as Any)
 
-				//TODO:
-				self.currentMainAccount = account
 
-				UserDefaults.standard.synchronize()
+					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
+					UserDefaults.standard.synchronize()
 
-				//TODO:
-				//multiAccountArray = nil
+					//TODO:
+					//multiAccountArray = nil
 
-				callback(true, NSNull())
+					callback(true, NSNull())
 			})
 
 			alertController.addAction(selectAction)
@@ -176,7 +191,7 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func socialComposeController(forServiceIdentifier serviceIdentifier: String, initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {
+	func socialComposeController(forServiceIdentifier serviceIdentifier: String, initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {	FXDLog_Func()
 
 		guard SLComposeViewController.isAvailable(forServiceType: serviceIdentifier) else {
 
@@ -209,7 +224,9 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func renewAccountCredential(forTypeIdentifier typeIdentifier: String, callback: @escaping FXDclosureFinished) {
+	func renewAccountCredential(forTypeIdentifier typeIdentifier: String, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+
+		debugPrint(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount?.username == nil else {
 			callback(true, NSNull())
@@ -217,7 +234,11 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) { (renewResult:ACAccountCredentialRenewResult, error:Error?) in
+		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) {
+			(renewResult:ACAccountCredentialRenewResult, error:Error?) in
+
+			debugPrint(renewResult)
+			debugPrint(error as Any)
 
 			callback(renewResult == .renewed, NSNull())
 		}
@@ -226,14 +247,17 @@ class FXDmoduleTwitter: NSObject {
 
 
 	//MARK: Twitter specific
-	public func twitterUserShow(withScreenName screenName: String) {
+	public func twitterUserShow(withScreenName screenName: String) {	FXDLog_Func()
+
+		debugPrint(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount != nil else {
 			return
 		}
 
 
-		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) { (shouldRequest: Bool, nothing: Any) in
+		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) {
+			(shouldRequest: Bool, nothing: Any) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
 			let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
@@ -242,18 +266,21 @@ class FXDmoduleTwitter: NSObject {
 
 			defaultRequest.account = self.currentMainAccount
 
-			defaultRequest.perform(handler: { (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+			defaultRequest.perform(handler: {
+				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
-				FXDLog(responseData)
-				FXDLog(urlResponse)
-				FXDLog(error)
+				debugPrint(responseData as Any)
+				debugPrint(urlResponse as Any)
+				debugPrint(error as Any)
 
 				//TODO: Reconsider bring evaluation to be more generic function
 			})
 		}
 	}
 
-	public func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDclosureFinished) {
+	public func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+
+		debugPrint(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount != nil else {
 			callback(false, NSNull())
@@ -261,7 +288,8 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) { (shouldRequest: Bool, nothing: Any) in
+		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) {
+			(shouldRequest: Bool, nothing: Any) in
 
 			guard shouldRequest else {
 				callback(false, NSNull())
@@ -287,13 +315,14 @@ class FXDmoduleTwitter: NSObject {
 
 			defaultRequest.account = self.currentMainAccount
 
-			defaultRequest.perform(handler: { (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+			defaultRequest.perform(handler: {
+				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
-				FXDLog(responseData)
-				FXDLog(urlResponse)
-				FXDLog(error)
+				debugPrint(responseData as Any)
+				debugPrint(urlResponse as Any)
+				debugPrint(error as Any)
 
-				//TODO: Reconsider bring evaluation to be more generic function
+				//TODO: Reconsider bringing evaluation to be more generic function
 
 				callback(error == nil, NSNull())
 			})
