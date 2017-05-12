@@ -10,18 +10,18 @@ import ReactiveCocoa
 import Result
 
 
-class FXDmoduleMedia {
+class FXDmoduleMedia: NSObject {
 
-	let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
+	let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem?, NoError>.pipe()
 
-	lazy var musicPlayer: MPMusicPlayerController = {
+	lazy var musicPlayer: MPMusicPlayerController? = {
 		return MPMusicPlayerController.systemMusicPlayer()
 	}()
 	var lastMediaItem: MPMediaItem?
 
 
 	deinit {	FXDLog_Func()
-		musicPlayer.endGeneratingPlaybackNotifications()
+		musicPlayer?.endGeneratingPlaybackNotifications()
 		MPMediaLibrary.default().endGeneratingLibraryChangeNotifications()
 	}
 
@@ -29,7 +29,7 @@ class FXDmoduleMedia {
 	func startObservingMediaNotifications() {	FXDLog_Func()
 
 		//MARK: Intentional. Can't use mediaModule(musicPlayer) in simulator after all
-		print("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
+		debugPrint("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
 		guard TARGET_OS_SIMULATOR == 0 else {
 			return
 		}
@@ -37,38 +37,37 @@ class FXDmoduleMedia {
 
 		//MARK: This app has crashed because it attempted to access privacy-sensitive data without a usage description.  The app's Info.plist must contain an NSAppleMusicUsageDescription key with a string value explaining to the user how the app uses this data.
 
-		NotificationCenter.default
-			.addObserver(self,
+		NotificationCenter.default.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerPlaybackStateDidChange(_:)),
 			             name: NSNotification.Name.MPMusicPlayerControllerPlaybackStateDidChange,
 			             object:self.musicPlayer)
 
-		NotificationCenter.default
-			.addObserver(self,
+		NotificationCenter.default.addObserver(self,
 			             selector: #selector(observedMPMusicPlayerControllerNowPlayingItemDidChange(_:)),
 			             name: NSNotification.Name.MPMusicPlayerControllerNowPlayingItemDidChange,
 			             object:self.musicPlayer)
 
-		self.musicPlayer.beginGeneratingPlaybackNotifications()
-
-
-		NotificationCenter.default
-			.addObserver(self,
+		NotificationCenter.default.addObserver(self,
 			             selector: #selector(observedMPMediaLibraryDidChange(_:)),
 			             name: NSNotification.Name.MPMediaLibraryDidChange,
 			             object:MPMediaLibrary.default())
+
+
+		if self.musicPlayer != nil {
+			self.musicPlayer!.beginGeneratingPlaybackNotifications()
+		}
 
 		MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
 	}
 
 	@objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		debugPrint(self.musicPlayer.playbackState.rawValue)
+		debugPrint(self.musicPlayer?.playbackState.rawValue as Any)
 	}
 
 	@objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 
-		debugPrint(self.musicPlayer.nowPlayingItem?.title)
-		debugPrint(self.lastMediaItem?.title)
+		debugPrint(self.musicPlayer?.nowPlayingItem?.title as Any)
+		debugPrint(self.lastMediaItem?.title as Any)
 
 
 		/*
@@ -80,7 +79,7 @@ class FXDmoduleMedia {
 
 
 			//MARK: It's responsibility of the developer to control repeated item
-			self.nowplayingObserver.send(value: self.musicPlayer.nowPlayingItem!)
+			self.nowplayingObserver.send(value: self.musicPlayer?.nowPlayingItem)
 //		}
 	}
 

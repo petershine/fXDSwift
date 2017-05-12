@@ -4,7 +4,6 @@ import UIKit
 import Foundation
 
 
-@objc
 class FXDViewController: UIViewController {
 
 	override func didReceiveMemoryWarning() {	FXDLog_SEPARATE()
@@ -32,10 +31,10 @@ class FXDViewController: UIViewController {
 	override func viewDidLoad() {	FXDLog_Func()
 		super.viewDidLoad()
 
-		FXDLog(self.storyboard)
-		FXDLog(self.nibName)
-		FXDLog(self.title)
-		FXDLog(self.parent)
+		debugPrint(self.storyboard as Any)
+		debugPrint(self.nibName as Any)
+		debugPrint(self.title as Any)
+		debugPrint(self.parent as Any)
 	}
 
 	//1
@@ -59,9 +58,9 @@ class FXDViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {	FXDLog_Func()
 		super.viewDidAppear(animated)
 
-		FXDLog(self.storyboard)
-		FXDLog(self.nibName)
-		FXDLog(self.title)
-		FXDLog(self.parent)
+		debugPrint(self.storyboard as Any)
+		debugPrint(self.nibName as Any)
+		debugPrint(self.title as Any)
+		debugPrint(self.parent as Any)
 	}
 }
