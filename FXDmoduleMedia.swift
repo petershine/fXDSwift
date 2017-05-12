@@ -62,13 +62,13 @@ import Result
 	}
 
 	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		FXDLog(self.musicPlayer.playbackState.rawValue)
+		debugPrint(self.musicPlayer.playbackState.rawValue)
 	}
 
 	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 
-		FXDLog(self.musicPlayer.nowPlayingItem?.title)
-		FXDLog(self.lastMediaItem?.title)
+		debugPrint(self.musicPlayer.nowPlayingItem?.title)
+		debugPrint(self.lastMediaItem?.title)
 
 
 		/*
@@ -76,7 +76,7 @@ import Result
 */
 
 			//self.lastMediaItem = self.musicPlayer.nowPlayingItem
-			//FXDLog(self.lastMediaItem)
+			//debugPrint(self.lastMediaItem)
 
 
 			//MARK: It's responsibility of the developer to control repeated item
@@ -85,6 +85,6 @@ import Result
 	}
 
 	func observedMPMediaLibraryDidChange(_ notification: Notification) {
-		FXDLog(MPMediaLibrary.default().lastModifiedDate)
+		debugPrint(MPMediaLibrary.default().lastModifiedDate)
 	}
 }

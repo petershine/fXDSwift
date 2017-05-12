@@ -20,7 +20,7 @@ class FXDmoduleCoredata: NSObject {
 
 		let bundleName: String = Bundle.main.infoDictionary?["CFBundleName"] as! String
 		let modelURL = Bundle.main.url(forResource: bundleName, withExtension: "momd")
-		FXDLog(modelURL)
+		debugPrint(modelURL)
 
 		return NSManagedObjectModel(contentsOf: modelURL!)!
 	}()
@@ -33,7 +33,7 @@ class FXDmoduleCoredata: NSObject {
 		bundleIdentifier = bundleIdentifier.replacingOccurrences(of: ".", with: "_")
 
 		let sqliteFilename: String = bundleIdentifier + ".sqlite"
-		FXDLog(sqliteFilename)
+		debugPrint(sqliteFilename)
 
 
 		let url = self.applicationDocumentsDirectory.appendingPathComponent(sqliteFilename)
@@ -55,7 +55,7 @@ class FXDmoduleCoredata: NSObject {
 			let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
 			// Replace this with code to handle the error appropriately.
 			// abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-			NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
+			debugPrint("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
 			abort()
 		}
 
@@ -75,7 +75,7 @@ class FXDmoduleCoredata: NSObject {
 
 	// MARK: - Core Data Saving support
 	func saveContext () {	FXDLog_Func()
-		FXDLog(managedObjectContext.hasChanges)
+		debugPrint(managedObjectContext.hasChanges)
 
 		if managedObjectContext.hasChanges {
 			do {
@@ -84,7 +84,7 @@ class FXDmoduleCoredata: NSObject {
 				// Replace this implementation with code to handle the error appropriately.
 				// abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 				let nserror = error as NSError
-				NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+				debugPrint("Unresolved error \(nserror), \(nserror.userInfo)")
 				abort()
 			}
 		}
