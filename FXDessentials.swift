@@ -2,12 +2,17 @@
 
 import UIKit
 import Foundation
+import os.log
 
 
-func FXDLog_Func(_ file: NSString = #file, function: NSString = #function) {
+func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
-		debugPrint(" ")
-		debugPrint("[\(file.lastPathComponent) \(function)]")
+		if #available(iOS 10.0, *) {
+			os_log("\n\n[%s %s]", filename, function)
+		} else {
+			// Fallback on earlier versions
+			debugPrint("\n\n[\((filename as NSString).lastPathComponent) \(function)]")
+		}
 	#endif
 }
 
@@ -42,4 +47,4 @@ func FXDLog_OVERRIDE() {
 
 
 //MARK: Closures
-typealias FXDclosureFinished = (Bool, Any) -> Void
+typealias FXDcallback = (Bool?, Any?) -> Void
