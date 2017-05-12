@@ -12,10 +12,12 @@ import os.log
 func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
 		if #available(iOS 10.0, *) {
-			os_log("\n\n[%s %s]", filename, function)
+			os_log(" ")
+			os_log("[%@ %@]", (filename as NSString).lastPathComponent, function)
 		} else {
 			// Fallback on earlier versions
-			debugPrint("\n\n[\((filename as NSString).lastPathComponent) \(function)]")
+			debugPrint(" ")
+			debugPrint("[\((filename as NSString).lastPathComponent) \(function)]")
 		}
 	#endif
 }
