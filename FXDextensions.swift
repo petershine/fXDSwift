@@ -6,19 +6,26 @@ import Foundation
 
 extension UIAlertController {
 
-	//MARK: Re-consider about returing like similar original method
-	static func simpleAlert(withTitle title: String? = NSLocalizedString("OK", comment: ""), message: String?, cancelButtonTitle: String?, handler: ((UIAlertAction) -> Swift.Void)? = nil) -> Void {
+	//MARK: Re-consider about returning like similar original method
+	static func simpleAlert(withTitle title: String?,
+	                        message: String?,
+	                        cancelTitle: String? = NSLocalizedString("OK", comment: ""),
+	                        handler: ((UIAlertAction) -> Swift.Void)? = nil) {
 
 		//NOTE: Assume this is the condition for simple alerting without choice
-		let cancelAction: UIAlertAction = UIAlertAction(title: cancelButtonTitle, style: .cancel, handler: handler)
+		let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-		let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-		alertController.addAction(cancelAction)
+		//*** Assertion failure in +[UIAlertAction _actionWithTitle:descriptiveText:image:style:handler:shouldDismissHandler:], /BuildRoot/Library/Caches/com.apple.xbs/Sources/UIKit_Sim/UIKit-3600.7.47/UIAlertAction.m:26
+		let cancelAction: UIAlertAction = UIAlertAction(title: cancelTitle,
+		                                                style: .cancel,
+		                                                handler: handler)
+
+		alert.addAction(cancelAction)
 
 
-		let currentWindow: UIWindow = UIApplication.shared.windows.last!
-		let rootScene = currentWindow.rootViewController
+		let mainWindows: UIWindow = UIApplication.shared.windows.last!
+		let rootScene = mainWindows.rootViewController
 
-		rootScene?.present(alertController, animated: true, completion: nil)
+		rootScene?.present(alert, animated: true, completion: nil)
 	}
 }
