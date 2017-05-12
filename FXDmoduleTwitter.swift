@@ -16,7 +16,6 @@ import CoreLocation
 //#define urlstringTwitterStatusUpdate	urlstringTwitter(@"statuses/update.json")
 
 
-@objc
 class FXDmoduleTwitter: NSObject {
 
 	let typeIdentifier = ACAccountTypeIdentifierTwitter

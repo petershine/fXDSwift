@@ -18,7 +18,6 @@ import FBSDKShareKit
 //#define urlstringFacebookVideoGraph(method)	[NSString stringWithFormat:@"%@%@", urlhostFacebookVideoGraph, method]
 
 
-@objc
 class FXDmoduleFacebook: NSObject {
 
 	let typeIdentifier = ACAccountTypeIdentifierFacebook

@@ -10,7 +10,7 @@ import ReactiveCocoa
 import Result
 
 
-@objc public class FXDmoduleMedia: NSObject {
+class FXDmoduleMedia: NSObject {
 
 	public let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
 

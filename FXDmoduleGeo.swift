@@ -11,7 +11,7 @@ import ReactiveCocoa
 import Result
 
 
-@objc public class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
+class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 	public let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation, NoError>.pipe()
 
