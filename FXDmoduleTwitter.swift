@@ -71,7 +71,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-	public func signInBySelectingAccount(forTypeIdentifier typeIdentifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.mainAccountType?.accountTypeDescription as Any)
 		debugPrint(self.mainAccountType?.accessGranted as Any)
@@ -246,7 +246,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 	//MARK: Twitter specific
-	public func twitterUserShow(withScreenName screenName: String) {	FXDLog_Func()
+	func twitterUserShow(withScreenName screenName: String) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
@@ -277,7 +277,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 	}
 
-	public func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 

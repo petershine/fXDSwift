@@ -13,12 +13,12 @@ import Result
 
 class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
-	public let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation, NoError>.pipe()
+	let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation, NoError>.pipe()
 
 	var didStartLocationManager : Bool = false
 	
 	var mainLocationManager : CLLocationManager?
-	public var lastLocation: CLLocation?
+	var lastLocation: CLLocation?
 
 
 	deinit {	FXDLog_Func()

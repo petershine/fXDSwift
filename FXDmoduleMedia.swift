@@ -12,12 +12,12 @@ import Result
 
 class FXDmoduleMedia: NSObject {
 
-	public let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
+	let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
 
 	lazy var musicPlayer: MPMusicPlayerController = {
 		return MPMusicPlayerController.systemMusicPlayer()
 	}()
-	public var lastMediaItem: MPMediaItem?
+	var lastMediaItem: MPMediaItem?
 
 
 	deinit {	FXDLog_Func()
