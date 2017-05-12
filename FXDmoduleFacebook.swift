@@ -70,10 +70,9 @@ class FXDmoduleFacebook: NSObject {
 
 
 		guard FBSDKAccessToken.current() == nil else {
-			self.showActionSheetFor(
-				typeIdentifier: typeIdentifier,
-				presentingScene: presentingScene,
-				callback: callback)
+			self.showActionSheet(forIdentifier: identifier,
+			                     presentingScene: presentingScene,
+			                     callback: callback)
 
 			return
 		}
@@ -138,10 +137,9 @@ class FXDmoduleFacebook: NSObject {
 			}
 
 
-			self.showActionSheetFor(
-				typeIdentifier: typeIdentifier,
-				presentingScene: presentingScene,
-				callback: callback)
+			self.showActionSheet(forIdentifier: identifier,
+			                     presentingScene: presentingScene,
+			                     callback: callback)
 		}
 	}
 
@@ -197,10 +195,9 @@ class FXDmoduleFacebook: NSObject {
 				//TODO: Until page updating is approved, just provide Timeline update only
 				//self.requestAccountsWith(presentingScene: presentingScene, callback: callback)
 
-				self.presentActionSheetWith(
-					accounts: self.multiAccountArray,
-					presentingScene: presentingScene,
-					callback: callback)
+				self.presentActionSheet(withAccounts: self.multiAccountArray,
+				                        presentingScene: presentingScene,
+				                        callback: callback)
 		})
 	}
 
@@ -357,10 +354,9 @@ class FXDmoduleFacebook: NSObject {
 
 					self.multiAccountArray?.append(contentsOf: collectedPages)
 
-					self.presentActionSheetWith(
-						accounts: self.multiAccountArray,
-						presentingScene: presentingScene,
-						callback: callback)
+					self.presentActionSheet(withAccounts: self.multiAccountArray,
+					                        presentingScene: presentingScene,
+					                        callback: callback)
 				}
 
 				batchConnection.start()
@@ -369,7 +365,7 @@ class FXDmoduleFacebook: NSObject {
 
 	func requestToPost(withMessage message:String, mediaLink:String?, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
 
-		self.requestSearchWith(latitude: latitude, longitude: longitude) {
+		self.requestSearch(withLatitude: latitude, longitude: longitude) {
 			(shouldContinue: Bool?, placeId: Any?) in
 
 			debugPrint(shouldContinue as Any)

@@ -78,13 +78,14 @@ class FXDmoduleTwitter: NSObject {
 
 
 		func GrantedAccess() -> Void {
-			self.showActionSheet(fromPresentingScene: presentingScene, typeIdentifier: typeIdentifier, callback: callback)
+			self.showActionSheet(fromPresentingScene: presentingScene,
+			                     typeIdentifier: identifier,
+			                     callback: callback)
 		}
 
 		func DeniedAccess() -> Void {
-
-			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""), message: self.reasonForConnecting, cancelButtonTitle: nil, handler: nil)
-
+			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""),
+			                              message: self.reasonForConnecting)
 			callback(false, NSNull())
 		}
 
@@ -116,7 +117,8 @@ class FXDmoduleTwitter: NSObject {
 		debugPrint(self.multiAccountArray)
 
 		guard self.multiAccountArray.count > 0 else {
-			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""), message: self.reasonForConnecting, cancelButtonTitle: nil, handler: nil)
+			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
+			                              message: self.reasonForConnecting)
 
 			callback(false, NSNull())
 			return
@@ -193,8 +195,8 @@ class FXDmoduleTwitter: NSObject {
 	func socialComposeController(forServiceIdentifier serviceIdentifier: String, initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {	FXDLog_Func()
 
 		guard SLComposeViewController.isAvailable(forServiceType: serviceIdentifier) else {
-
-			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please connect to Twitter", comment: ""), message: self.reasonForConnecting, cancelButtonTitle: nil, handler: nil)
+			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please connect to Twitter", comment: ""),
+			                              message: self.reasonForConnecting)
 
 			return nil
 		}
@@ -223,7 +225,7 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func renewAccountCredential(forTypeIdentifier typeIdentifier: String, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func renewAccountCredential(forIdentifier identifier: String, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
@@ -255,7 +257,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) {
+		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
 			(shouldRequest: Bool?, nothing: Any?) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
@@ -287,7 +289,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) {
+		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
 			(shouldRequest: Bool, nothing: Any) in
 
 			guard shouldRequest else {
