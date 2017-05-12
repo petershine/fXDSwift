@@ -5,6 +5,10 @@ import Foundation
 import os.log
 
 
+// @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
+
+//TODO: Adopt better debugging
+
 func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
 		if #available(iOS 10.0, *) {
@@ -16,8 +20,6 @@ func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#endif
 }
 
-
-//TODO: Adopt better debugging
 /*
 func FXDLog_SEPARATE(_ file: NSString = #file, function: NSString = #function) {
 	#if ForDEVELOPER
@@ -47,4 +49,6 @@ func FXDLog_OVERRIDE() {
 
 
 //MARK: Closures
-typealias FXDcallback = (Bool?, Any?) -> Void
+// Until interoperability allows this closure with optionals.
+//typealias FXDcallback = (Bool?, Any?) -> Void
+typealias FXDcallback = (Bool, Any) -> Void

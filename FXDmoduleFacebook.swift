@@ -63,7 +63,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	public func signInBySelectingAccountFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(typeIdentifier)
 		debugPrint(presentingScene)
@@ -147,7 +147,7 @@ class FXDmoduleFacebook: NSObject {
 	}
 
 
-	public func showActionSheetFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	public func showActionSheetFor(typeIdentifier: String, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(typeIdentifier)
 		debugPrint(presentingScene)
@@ -205,7 +205,7 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 
-	public func presentActionSheetWith(accounts:Array<Any>?, presentingScene: UIViewController, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	public func presentActionSheetWith(accounts:Array<Any>?, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(accounts as Any)
 		debugPrint(presentingScene)
@@ -276,7 +276,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	public func requestAccountsWith(presentingScene: UIViewController, callback:@escaping FXDclosureFinished) {	FXDLog_Func()
+	public func requestAccountsWith(presentingScene: UIViewController, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		let graphRequestAccounts = FBSDKGraphRequest(
 			graphPath: facebookGraphMeAccounts,
@@ -368,15 +368,12 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 
-	public func requestToPostWith(message:String, mediaLink:String?, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDclosureFinished) {	FXDLog_Func()
+	public func requestToPostWith(message:String, mediaLink:String?, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
 
-		self.requestSearchWith(
-			latitude: latitude,
-			longitude: longitude)
-		{ (shouldContinue:Bool,
-			placeId:Any?) in
+		self.requestSearchWith(latitude: latitude, longitude: longitude) {
+			(shouldContinue: Bool?, placeId: Any?) in
 
-			debugPrint(shouldContinue)
+			debugPrint(shouldContinue as Any)
 
 			debugPrint(message)
 
@@ -419,7 +416,7 @@ class FXDmoduleFacebook: NSObject {
 		}
 	}
 
-	public func requestSearchWith(latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDclosureFinished) {	FXDLog_Func()
+	public func requestSearchWith(latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(longitude)
 		debugPrint(latitude)

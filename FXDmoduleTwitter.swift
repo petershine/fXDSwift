@@ -72,7 +72,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-	public func signInBySelectingAccount(forTypeIdentifier typeIdentifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	public func signInBySelectingAccount(forTypeIdentifier typeIdentifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.mainAccountType?.accountTypeDescription as Any)
 		debugPrint(self.mainAccountType?.accessGranted as Any)
@@ -112,7 +112,7 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.multiAccountArray)
 
@@ -224,7 +224,7 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func renewAccountCredential(forTypeIdentifier typeIdentifier: String, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	func renewAccountCredential(forTypeIdentifier typeIdentifier: String, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
@@ -257,7 +257,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.renewAccountCredential(forTypeIdentifier: ACAccountTypeIdentifierTwitter) {
-			(shouldRequest: Bool, nothing: Any) in
+			(shouldRequest: Bool?, nothing: Any?) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
 			let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
@@ -278,7 +278,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 	}
 
-	public func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDclosureFinished) {	FXDLog_Func()
+	public func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
