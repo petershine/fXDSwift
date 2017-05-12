@@ -20,7 +20,7 @@ class FXDmoduleCoredata {
 
 		let bundleName: String = Bundle.main.infoDictionary?["CFBundleName"] as! String
 		let modelURL = Bundle.main.url(forResource: bundleName, withExtension: "momd")
-		debugPrint(modelURL)
+		debugPrint(modelURL as Any)
 
 		return NSManagedObjectModel(contentsOf: modelURL!)!
 	}()

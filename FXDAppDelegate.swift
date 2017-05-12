@@ -17,7 +17,7 @@ class FXDAppDelegate: UIResponder {
 	override init() {	FXDLog_SEPARATE()
 		super.init()
 
-		debugPrint(Bundle.main.infoDictionary)
+		debugPrint(Bundle.main.infoDictionary as Any)
 	}
 }
 
@@ -32,12 +32,12 @@ extension FXDAppDelegate: UIApplicationDelegate {
 	}
 
 	public func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {	FXDLog_SEPARATE()
-		debugPrint(launchOptions)
+		debugPrint(launchOptions as Any)
 
 		return true
 	}
 	public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {	FXDLog_SEPARATE()
-		debugPrint(launchOptions)
+		debugPrint(launchOptions as Any)
 
 		// Override point for customization after application launch.
 
