@@ -61,16 +61,6 @@ class FXDmoduleTwitter: NSObject {
 	}()
 
 
-	deinit {	FXDLog_Func()
-
-	}
-
-	override init() {
-		super.init()
-	}
-
-
-
 	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.mainAccountType?.accountTypeDescription as Any)

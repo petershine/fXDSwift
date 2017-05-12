@@ -10,7 +10,7 @@ import ReactiveCocoa
 import Result
 
 
-class FXDmoduleMedia: NSObject {
+class FXDmoduleMedia {
 
 	let (nowplayingSignal, nowplayingObserver) = Signal<MPMediaItem, NoError>.pipe()
 
@@ -61,11 +61,11 @@ class FXDmoduleMedia: NSObject {
 		MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
 	}
 
-	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
+	@objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
 		debugPrint(self.musicPlayer.playbackState.rawValue)
 	}
 
-	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
+	@objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 
 		debugPrint(self.musicPlayer.nowPlayingItem?.title)
 		debugPrint(self.lastMediaItem?.title)
@@ -84,7 +84,7 @@ class FXDmoduleMedia: NSObject {
 //		}
 	}
 
-	func observedMPMediaLibraryDidChange(_ notification: Notification) {
+	@objc func observedMPMediaLibraryDidChange(_ notification: Notification) {
 		debugPrint(MPMediaLibrary.default().lastModifiedDate)
 	}
 }

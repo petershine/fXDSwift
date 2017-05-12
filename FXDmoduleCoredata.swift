@@ -6,7 +6,7 @@ import Foundation
 import CoreData
 
 
-class FXDmoduleCoredata: NSObject {
+class FXDmoduleCoredata {
 
 
 	lazy var applicationDocumentsDirectory: URL = {

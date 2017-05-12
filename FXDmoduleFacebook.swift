@@ -52,16 +52,6 @@ class FXDmoduleFacebook: NSObject {
 	var batchFinishedClosure:((Bool) -> Void)?
 
 
-	deinit {	FXDLog_Func()
-
-	}
-
-	override init() {
-		super.init()
-	}
-
-
-
 	func signInBySelectingAccount(forIdentifier identifier: String, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(typeIdentifier)
