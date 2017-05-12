@@ -11,7 +11,7 @@ import ReactiveCocoa
 import Result
 
 
-class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
+class FXDmoduleGeo: NSObject {
 
 	let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation, NoError>.pipe()
 
@@ -132,6 +132,9 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 
 
 	public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
+extension FXDmoduleGeo: CLLocationManagerDelegate {
+	
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
 		debugPrint(String(status.rawValue))
 
@@ -144,7 +147,7 @@ class FXDmoduleGeo: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-	public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 
 		/*
 		if (self.lastLocation == nil ||
