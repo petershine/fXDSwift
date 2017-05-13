@@ -53,17 +53,14 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierFacebook, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(identifier)
 		debugPrint(presentingScene)
 		debugPrint(FBSDKAccessToken.current())
 
 
 		guard FBSDKAccessToken.current() == nil else {
-			self.showActionSheet(forIdentifier: identifier,
-			                     presentingScene: presentingScene,
-			                     callback: callback)
+			self.showActionSheet(presentingScene: presentingScene, callback: callback)
 
 			return
 		}
@@ -127,16 +124,13 @@ class FXDmoduleFacebook: NSObject {
 				}
 
 
-				self?.showActionSheet(forIdentifier: identifier,
-				                      presentingScene: presentingScene,
-				                      callback: callback)
+				self?.showActionSheet(presentingScene: presentingScene, callback: callback)
 		}
 	}
 
 
-	func showActionSheet(forIdentifier identifier: String = ACAccountTypeIdentifierFacebook, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func showActionSheet(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(identifier)
 		debugPrint(presentingScene)
 		debugPrint(FBSDKAccessToken.current())
 
@@ -178,13 +172,13 @@ class FXDmoduleFacebook: NSObject {
 				//MARK://TODO: Until page updating is approved, just provide Timeline update only
 				//self.requestAccountsWith(presentingScene: presentingScene, callback: callback)
 
-				self?.presentActionSheet(withAccounts: multiAccount,
+				self?.presentActionSheet(multiAccount: multiAccount,
 				                         presentingScene: presentingScene,
 				                         callback: callback)
 		})
 	}
 
-	func presentActionSheet(withAccounts multiAccount:Array<Dictionary<String, Any>>?, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func presentActionSheet(multiAccount:Array<Dictionary<String, Any>>?, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(multiAccount as Any)
 		debugPrint(presentingScene)
@@ -259,7 +253,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	func requestAccounts(withPresentingScene presentingScene: UIViewController, callback:@escaping FXDcallback) {	FXDLog_Func()
+	func requestAccounts(presentingScene: UIViewController, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		let graphRequestAccounts = FBSDKGraphRequest(
 			graphPath: facebookGraphMeAccounts,
@@ -342,7 +336,7 @@ class FXDmoduleFacebook: NSObject {
 
 					//MARK://TODO: How to combine accounts and pages?
 
-					self?.presentActionSheet(withAccounts: collectedPages,
+					self?.presentActionSheet(multiAccount: collectedPages,
 					                         presentingScene: presentingScene,
 					                         callback: callback)
 				}
@@ -351,9 +345,9 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 
-	func requestToPost(withMessage message:String, mediaLink:String?, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
+	func requestToPost(message: String, mediaLink: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		self.requestSearch(withLatitude: latitude, longitude: longitude) {
+		self.requestSearch(latitude: latitude, longitude: longitude) {
 			[weak self] (shouldContinue: Bool?, placeId: Any?) in
 
 			debugPrint(shouldContinue as Any)
@@ -397,7 +391,7 @@ class FXDmoduleFacebook: NSObject {
 		}
 	}
 
-	func requestSearch(withLatitude latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
+	func requestSearch(latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(longitude)
 		debugPrint(latitude)
