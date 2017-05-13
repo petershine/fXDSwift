@@ -26,7 +26,7 @@ class FXDmoduleTwitter: NSObject {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierTwitter)
 	}()
 
-	
+
 	lazy var currentMainAccount: ACAccount? = {
 		var mainAccount: ACAccount? = nil
 
@@ -54,16 +54,14 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.mainAccountType?.accountTypeDescription as Any)
 		debugPrint(self.mainAccountType?.accessGranted as Any)
 
 
 		func GrantedAccess() -> Void {
-			self.showActionSheet(fromPresentingScene: presentingScene,
-			                     typeIdentifier: identifier,
-			                     callback: callback)
+			self.showActionSheet(presentingScene: presentingScene, callback: callback)
 		}
 
 		func DeniedAccess() -> Void {
@@ -95,7 +93,7 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func showActionSheet(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		let multiAccount: [ACAccount] = self.mainAccountStore.accounts(with:self.mainAccountType) as! [ACAccount]
 		debugPrint(multiAccount)
@@ -164,9 +162,9 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func socialComposeController(forServiceIdentifier serviceIdentifier: String, initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {	FXDLog_Func()
+	func socialComposeController(initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {	FXDLog_Func()
 
-		guard SLComposeViewController.isAvailable(forServiceType: serviceIdentifier) else {
+		guard SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please connect to Twitter", comment: ""),
 			                              message: self.reasonForConnecting)
 
@@ -174,7 +172,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		let socialComposeController: SLComposeViewController = SLComposeViewController(forServiceType: serviceIdentifier)
+		let socialComposeController: SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
 
 
 		if initialText != nil {
@@ -197,11 +195,11 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func renewAccountCredential(forIdentifier identifier: String, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func renewAccountCredential(_ callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
-		guard self.currentMainAccount?.username == nil else {
+		guard self.currentMainAccount != nil else {
 			callback(true, NSNull())
 			return
 		}
@@ -229,7 +227,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
+		self.renewAccountCredential({
 			[weak self] (shouldRequest: Bool?, nothing: Any?) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
@@ -248,7 +246,7 @@ class FXDmoduleTwitter: NSObject {
 
 				//MARK://TODO: Reconsider bring evaluation to be more generic function
 			})
-		}
+		})
 	}
 
 	func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
@@ -261,7 +259,7 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
+		self.renewAccountCredential({
 			[weak self] (shouldRequest: Bool, nothing: Any) in
 
 			guard shouldRequest else {
@@ -299,6 +297,6 @@ class FXDmoduleTwitter: NSObject {
 
 				callback(error == nil, NSNull())
 			})
-		}
+		})
 	}
 }
