@@ -9,7 +9,7 @@ import Accounts
 import CoreLocation
 
 
-//TODO: Prepare formatter function
+//MARK://TODO: Prepare formatter function
 //#define urlrootTwitterAPI			@"https://api.twitter.com/1.1/"
 //#define urlstringTwitter(method)	[NSString stringWithFormat:@"%@%@", urlrootTwitterAPI, method]
 //#define urlstringTwitterUserShow		urlstringTwitter(@"users/show.json")
@@ -24,7 +24,7 @@ class FXDmoduleTwitter: NSObject {
 	let mainAccountStore: ACAccountStore = ACAccountStore()
 
 
-	//TODO: Reconsider lazy updated variables
+	//MARK://TODO: Reconsider lazy updated variables
 	lazy var mainAccountType: ACAccountType? = {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
 	}()
@@ -125,8 +125,7 @@ class FXDmoduleTwitter: NSObject {
 			style: .cancel) {
 				(action: UIAlertAction) in
 
-				//TODO:
-				//multiAccountArray = nil
+				//MARK://TODO: self.multiAccountArray = nil
 
 				callback(false, NSNull())
 		}
@@ -140,11 +139,10 @@ class FXDmoduleTwitter: NSObject {
 				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
 				UserDefaults.standard.synchronize()
 
-				//TODO:
+				//MARK://TODO:
 				self.currentMainAccount = nil
 
-				//TODO:
-				//multiAccountArray = nil
+				//MARK://TODO: self.multiAccountArray = nil
 
 				callback(true, NSNull())
 		}
@@ -161,7 +159,7 @@ class FXDmoduleTwitter: NSObject {
 				handler: {
 					(action: UIAlertAction) in
 
-					//TODO:
+					//MARK://TODO:
 					self.currentMainAccount = account
 					debugPrint(self.currentMainAccount as Any)
 
@@ -169,8 +167,7 @@ class FXDmoduleTwitter: NSObject {
 					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
 					UserDefaults.standard.synchronize()
 
-					//TODO:
-					//multiAccountArray = nil
+					//MARK://TODO: self.multiAccountArray = nil
 
 					callback(true, NSNull())
 			})
@@ -264,7 +261,7 @@ class FXDmoduleTwitter: NSObject {
 				debugPrint(urlResponse as Any)
 				debugPrint(error as Any)
 
-				//TODO: Reconsider bring evaluation to be more generic function
+				//MARK://TODO: Reconsider bring evaluation to be more generic function
 			})
 		}
 	}
@@ -313,7 +310,7 @@ class FXDmoduleTwitter: NSObject {
 				debugPrint(urlResponse as Any)
 				debugPrint(error as Any)
 
-				//TODO: Reconsider bringing evaluation to be more generic function
+				//MARK://TODO: Reconsider bringing evaluation to be more generic function
 
 				callback(error == nil, NSNull())
 			})

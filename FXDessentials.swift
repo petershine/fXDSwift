@@ -7,7 +7,7 @@ import os.log
 
 // @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
 
-//TODO: Adopt better debugging
+//MARK://TODO: Adopt better debugging
 
 func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
