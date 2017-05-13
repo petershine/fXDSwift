@@ -17,6 +17,7 @@ class FXDmoduleMedia: NSObject {
 	lazy var musicPlayer: MPMusicPlayerController? = {
 		return MPMusicPlayerController.systemMusicPlayer()
 	}()
+
 	var lastMediaItem: MPMediaItem?
 
 

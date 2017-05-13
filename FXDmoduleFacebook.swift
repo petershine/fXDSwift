@@ -20,8 +20,19 @@ import FBSDKShareKit
 
 class FXDmoduleFacebook: NSObject {
 
-	let typeIdentifier = ACAccountTypeIdentifierFacebook
 	let reasonForConnecting = NSLocalizedString("Please go to device's Settings and add your Facebook account", comment: "")
+
+	let mainAccountStore: ACAccountStore = ACAccountStore()
+
+	lazy var mainAccountType: ACAccountType? = {
+		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierFacebook)
+	}()
+
+
+	lazy var currentFacebookAccount: Dictionary? =  {
+		return UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
+	}()
+
 
 	let initialAccessOptions: [String:Any] = [
 		ACFacebookAppIdKey:	apikeyFacebookAppId,
@@ -38,23 +49,16 @@ class FXDmoduleFacebook: NSObject {
 		ACFacebookAudienceKey: ACFacebookAudienceEveryone
 	]
 
-	let mainAccountStore: ACAccountStore = ACAccountStore()
-
-	lazy var mainAccountType: ACAccountType = {
-		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
-	}()
-
-
-	var currentFacebookAccount: Dictionary? =  UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
 
 	var multiAccountArray: Array<Any>?
 
 	var batchFinishedClosure:((Bool) -> Void)?
 
 
-	func signInBySelectingAccount(forIdentifier identifier: String, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(typeIdentifier)
+	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierFacebook, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+
+		debugPrint(identifier)
 		debugPrint(presentingScene)
 		debugPrint(FBSDKAccessToken.current())
 
@@ -96,53 +100,50 @@ class FXDmoduleFacebook: NSObject {
 			withPublishPermissions:["publish_actions",
 			                        "manage_pages",
 			                        "publish_pages"],
-			from: presentingScene)
-		{ (result:FBSDKLoginManagerLoginResult?,
-			error:Error?) in
+			from: presentingScene) {
+				[weak self] (result:FBSDKLoginManagerLoginResult?, error:Error?) in
 
-			debugPrint(result as Any)
-			debugPrint(error as Any)
+				debugPrint(result as Any)
+				debugPrint(error as Any)
 
-			guard result != nil else {
-				callback(false, NSNull())
-				return
-			}
-
-
-			debugPrint(result?.token.appID as Any)
-			debugPrint(result?.token.expirationDate as Any)
-			debugPrint(result?.token.refreshDate as Any)
-			debugPrint(result?.token.tokenString as Any)
-			debugPrint(result?.token.userID as Any)
+				guard result != nil else {
+					callback(false, NSNull())
+					return
+				}
 
 
-			debugPrint(result?.grantedPermissions.description as Any)
-			debugPrint(result?.declinedPermissions.description as Any)
-
-			debugPrint(result?.isCancelled as Any)
-
-			guard result?.isCancelled == false else {
-				callback(false, NSNull())
-				return
-			}
+				debugPrint(result?.token.appID as Any)
+				debugPrint(result?.token.expirationDate as Any)
+				debugPrint(result?.token.refreshDate as Any)
+				debugPrint(result?.token.tokenString as Any)
+				debugPrint(result?.token.userID as Any)
 
 
-			self.showActionSheet(forIdentifier: identifier,
-			                     presentingScene: presentingScene,
-			                     callback: callback)
+				debugPrint(result?.grantedPermissions.description as Any)
+				debugPrint(result?.declinedPermissions.description as Any)
+
+				debugPrint(result?.isCancelled as Any)
+
+				guard result?.isCancelled == false else {
+					callback(false, NSNull())
+					return
+				}
+
+
+				self?.showActionSheet(forIdentifier: identifier,
+				                      presentingScene: presentingScene,
+				                      callback: callback)
 		}
 	}
 
 
-	func showActionSheet(forIdentifier identifier: String, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func showActionSheet(forIdentifier identifier: String = ACAccountTypeIdentifierFacebook, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(typeIdentifier)
+		debugPrint(identifier)
 		debugPrint(presentingScene)
 		debugPrint(FBSDKAccessToken.current())
 
 		debugPrint(self.multiAccountArray as Any)
-
-
 
 		//FBSDKLog: starting with Graph API v2.4, GET requests for /me/accounts should contain an explicit "fields" parameter
 		//https://developers.facebook.com/docs/graph-api/reference/user/
@@ -332,7 +333,6 @@ class FXDmoduleFacebook: NSObject {
 				self.batchFinishedClosure = { (shouldContinue: Bool) in
 
 					debugPrint(shouldContinue)
-
 					debugPrint(self.multiAccountArray as Any)
 					debugPrint(collectedPages)
 
@@ -451,8 +451,6 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 }
-
-
 
 
 extension FXDmoduleFacebook: FBSDKGraphRequestConnectionDelegate {

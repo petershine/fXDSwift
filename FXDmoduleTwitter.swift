@@ -17,20 +17,21 @@ import CoreLocation
 
 
 class FXDmoduleTwitter: NSObject {
-
-	let typeIdentifier = ACAccountTypeIdentifierTwitter
+	
 	let reasonForConnecting = NSLocalizedString("Please go to device's Settings and add your Twitter account", comment: "")
 
 	let mainAccountStore: ACAccountStore = ACAccountStore()
 
-
-	//MARK://TODO: Reconsider lazy updated variables
 	lazy var mainAccountType: ACAccountType? = {
-		return self.mainAccountStore.accountType(withAccountTypeIdentifier:self.typeIdentifier)
+		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierTwitter)
 	}()
 
-	lazy var currentMainAccount: ACAccount? = {
+	lazy var multiAccountArray: Array<Any>? = {
+		return self.mainAccountStore.accounts(with:self.mainAccountType)
+	}()
 
+
+	lazy var currentMainAccount: ACAccount? = {
 		var mainAccount: ACAccount? = nil
 
 		let accountObjKey: String = userdefaultObjMainTwitterAccountIdentifier
@@ -55,10 +56,6 @@ class FXDmoduleTwitter: NSObject {
 		return mainAccount
 	}()
 
-
-	lazy var multiAccountArray: Array<Any> = {
-		return self.mainAccountStore.accounts(with:self.mainAccountType)
-	}()
 
 
 	func signInBySelectingAccount(forIdentifier identifier: String = ACAccountTypeIdentifierTwitter, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
@@ -104,9 +101,9 @@ class FXDmoduleTwitter: NSObject {
 
 	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(self.multiAccountArray)
+		debugPrint(self.multiAccountArray as Any)
 
-		guard self.multiAccountArray.count > 0 else {
+		guard self.multiAccountArray != nil && self.multiAccountArray!.count > 0 else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
 			                              message: self.reasonForConnecting)
 
