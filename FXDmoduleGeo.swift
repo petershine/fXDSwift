@@ -124,7 +124,7 @@ class FXDmoduleGeo: NSObject {
 		let geocoder: CLGeocoder = CLGeocoder()
 
 		geocoder.reverseGeocodeLocation((self.mainLocationManager?.location)!) {
-			(placemarks, error) in
+			[weak self] (placemarks, error) in
 
 			debugPrint(error as Any)
 

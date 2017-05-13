@@ -157,9 +157,7 @@ class FXDmoduleFacebook: NSObject {
 
 		_ = graphRequestMe?.start(
 			completionHandler: {
-				(requested:FBSDKGraphRequestConnection?,
-				result:Any?,
-				error:Error?) in
+				[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 				debugPrint(result as Any)
 				debugPrint(error as Any)
@@ -178,17 +176,16 @@ class FXDmoduleFacebook: NSObject {
 				var modified = result as! Dictionary<String, Any>
 				modified["category"] = "TIMELINE"
 
-				self.multiAccountArray?.append(modified as Any)
-
-				debugPrint(self.multiAccountArray as Any)
+				self?.multiAccountArray?.append(modified as Any)
+				debugPrint(self?.multiAccountArray as Any)
 
 
 				//MARK://TODO: Until page updating is approved, just provide Timeline update only
 				//self.requestAccountsWith(presentingScene: presentingScene, callback: callback)
 
-				self.presentActionSheet(withAccounts: self.multiAccountArray,
-				                        presentingScene: presentingScene,
-				                        callback: callback)
+				self?.presentActionSheet(withAccounts: self?.multiAccountArray,
+				                         presentingScene: presentingScene,
+				                         callback: callback)
 		})
 	}
 
@@ -209,7 +206,7 @@ class FXDmoduleFacebook: NSObject {
 		let cancelAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel) {
-				(action:UIAlertAction) in
+				[weak self] (action:UIAlertAction) in
 
 				callback(false, NSNull())
 		}
@@ -217,7 +214,7 @@ class FXDmoduleFacebook: NSObject {
 		let signOutAction = UIAlertAction(
 			title: NSLocalizedString("Sign Out", comment: ""),
 			style: .destructive) {
-				(action:UIAlertAction) in
+				[weak self] (action:UIAlertAction) in
 
 				//MARK://TODO: resetCredential: Sign Out
 
@@ -237,7 +234,7 @@ class FXDmoduleFacebook: NSObject {
 				title: buttonTitle,
 				style: .default,
 				handler: {
-					(action:UIAlertAction) in
+					[weak self] (action:UIAlertAction) in
 
 					UserDefaults.standard.set(
 						account,
@@ -245,7 +242,7 @@ class FXDmoduleFacebook: NSObject {
 					UserDefaults.standard.synchronize()
 
 
-					self.currentFacebookAccount = account as? Dictionary
+					self?.currentFacebookAccount = account as? Dictionary
 
 					callback(true, account)
 			})
@@ -270,10 +267,8 @@ class FXDmoduleFacebook: NSObject {
 			parameters: ["fields": "data"])
 
 		_ = graphRequestAccounts?.start(
-			completionHandler:
-			{ (requested:FBSDKGraphRequestConnection?,
-				result:Any?,
-				error:Error?) in
+			completionHandler: {
+				[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 				debugPrint(result as Any)
 				debugPrint(error as Any)
@@ -313,9 +308,7 @@ class FXDmoduleFacebook: NSObject {
 					batchConnection.add(
 						graphRequestPage,
 						completionHandler: {
-							(requested:FBSDKGraphRequestConnection?,
-							result:Any?,
-							error:Error?) in
+							[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 							debugPrint(result as Any)
 							debugPrint(error as Any)
@@ -330,10 +323,17 @@ class FXDmoduleFacebook: NSObject {
 				}
 
 
-				self.batchFinishedClosure = { (shouldContinue: Bool) in
+				guard self != nil else {
+					callback(false, NSNull())
+					return
+				}
+
+
+				self!.batchFinishedClosure = {
+					[weak self] (shouldContinue: Bool) in
 
 					debugPrint(shouldContinue)
-					debugPrint(self.multiAccountArray as Any)
+					debugPrint(self?.multiAccountArray as Any)
 					debugPrint(collectedPages)
 
 					guard shouldContinue else {
@@ -342,11 +342,11 @@ class FXDmoduleFacebook: NSObject {
 					}
 
 
-					self.multiAccountArray?.append(contentsOf: collectedPages)
+					self?.multiAccountArray?.append(contentsOf: collectedPages)
 
-					self.presentActionSheet(withAccounts: self.multiAccountArray,
-					                        presentingScene: presentingScene,
-					                        callback: callback)
+					self?.presentActionSheet(withAccounts: self?.multiAccountArray,
+					                         presentingScene: presentingScene,
+					                         callback: callback)
 				}
 
 				batchConnection.start()
@@ -356,14 +356,14 @@ class FXDmoduleFacebook: NSObject {
 	func requestToPost(withMessage message:String, mediaLink:String?, latitude:CLLocationDegrees, longitude:CLLocationDegrees, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		self.requestSearch(withLatitude: latitude, longitude: longitude) {
-			(shouldContinue: Bool?, placeId: Any?) in
+			[weak self] (shouldContinue: Bool?, placeId: Any?) in
 
 			debugPrint(shouldContinue as Any)
 
 			debugPrint(message)
 
 
-			let facebookId:String = self.currentFacebookAccount?["id"] as! String
+			let facebookId:String = self?.currentFacebookAccount?["id"] as! String
 			let graphPath = "\(facebookId)/feed"
 			debugPrint(graphPath)
 
@@ -387,10 +387,8 @@ class FXDmoduleFacebook: NSObject {
 
 			//message = "(#200) Insufficient permission to post to target on behalf of the viewer";
 			_ = graphRequestPost?.start(
-				completionHandler:
-				{ (requested:FBSDKGraphRequestConnection?,
-					result:Any?,
-					error:Error?) in
+				completionHandler: {
+					[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 					debugPrint(result as Any)
 					debugPrint(error as Any)
@@ -420,10 +418,8 @@ class FXDmoduleFacebook: NSObject {
 		debugPrint(graphRequestSearch as Any)
 
 		_ = graphRequestSearch?.start(
-			completionHandler:
-			{ (requested:FBSDKGraphRequestConnection?,
-				result:Any?,
-				error:Error?) in
+			completionHandler:{
+				[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 				debugPrint(result as Any)
 				debugPrint(error as Any)

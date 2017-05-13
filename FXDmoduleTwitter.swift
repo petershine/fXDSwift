@@ -85,7 +85,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.mainAccountStore.requestAccessToAccounts(with: self.mainAccountType, options: nil) {
-			(granted: Bool, error: Error?) in
+			[weak self] (granted: Bool, error: Error?) in
 
 			DispatchQueue.main.async {
 				guard granted else {
@@ -120,7 +120,7 @@ class FXDmoduleTwitter: NSObject {
 		let cancelAction: UIAlertAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel) {
-				(action: UIAlertAction) in
+				[weak self] (action: UIAlertAction) in
 
 				//MARK://TODO: self.multiAccountArray = nil
 
@@ -131,13 +131,13 @@ class FXDmoduleTwitter: NSObject {
 		let signOutAction: UIAlertAction = UIAlertAction(
 			title: NSLocalizedString("Sign Out", comment: ""),
 			style: .destructive) {
-				(action: UIAlertAction) in
+				[weak self] (action: UIAlertAction) in
 
 				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
 				UserDefaults.standard.synchronize()
 
 				//MARK://TODO:
-				self.currentMainAccount = nil
+				self?.currentMainAccount = nil
 
 				//MARK://TODO: self.multiAccountArray = nil
 
@@ -154,11 +154,11 @@ class FXDmoduleTwitter: NSObject {
 				title: String("@\(account.username!)"),
 				style: .default,
 				handler: {
-					(action: UIAlertAction) in
+					[weak self] (action: UIAlertAction) in
 
 					//MARK://TODO:
-					self.currentMainAccount = account
-					debugPrint(self.currentMainAccount as Any)
+					self?.currentMainAccount = account
+					debugPrint(self?.currentMainAccount as Any)
 
 
 					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
@@ -220,7 +220,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) {
-			(renewResult:ACAccountCredentialRenewResult, error:Error?) in
+			[weak self] (renewResult:ACAccountCredentialRenewResult, error:Error?) in
 
 			debugPrint(renewResult)
 			debugPrint(error as Any)
@@ -242,17 +242,17 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
-			(shouldRequest: Bool?, nothing: Any?) in
+			[weak self] (shouldRequest: Bool?, nothing: Any?) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
 			let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
 
 			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, url: requestURL, parameters: parameters)
 
-			defaultRequest.account = self.currentMainAccount
+			defaultRequest.account = self?.currentMainAccount
 
 			defaultRequest.perform(handler: {
-				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
 				debugPrint(responseData as Any)
 				debugPrint(urlResponse as Any)
@@ -274,7 +274,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.renewAccountCredential(forIdentifier: ACAccountTypeIdentifierTwitter) {
-			(shouldRequest: Bool, nothing: Any) in
+			[weak self] (shouldRequest: Bool, nothing: Any) in
 
 			guard shouldRequest else {
 				callback(false, NSNull())
@@ -298,10 +298,10 @@ class FXDmoduleTwitter: NSObject {
 
 			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, url: requestURL, parameters: parameters)
 
-			defaultRequest.account = self.currentMainAccount
+			defaultRequest.account = self?.currentMainAccount
 
 			defaultRequest.perform(handler: {
-				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
 				debugPrint(responseData as Any)
 				debugPrint(urlResponse as Any)

@@ -56,7 +56,7 @@ class FXDmoduleYoutube: NSObject {
 		debugPrint(request)
 
 		let searchTask = URLSession.shared.dataTask(with: request) {
-			(data:Data?, response:URLResponse?, error:Error?) in
+			[weak self] (data:Data?, response:URLResponse?, error:Error?) in
 
 			debugPrint(data as Any)
 			debugPrint(response as Any)
