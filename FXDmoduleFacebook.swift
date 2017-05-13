@@ -29,7 +29,7 @@ class FXDmoduleFacebook: NSObject {
 	}()
 
 
-	lazy var currentFacebookAccount: Dictionary? =  {
+	lazy var currentFacebookAccount: Dictionary<String, Any>? =  {
 		return UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
 	}()
 
@@ -48,9 +48,6 @@ class FXDmoduleFacebook: NSObject {
 		                           facebookPermissionPublishStream],
 		ACFacebookAudienceKey: ACFacebookAudienceEveryone
 	]
-
-
-	var multiAccountArray: Array<Any>?
 
 	var batchFinishedClosure:((Bool) -> Void)?
 
@@ -91,7 +88,7 @@ class FXDmoduleFacebook: NSObject {
 
 			callback((result?.isCancelled)! == false, error as Any)
 		}
-*/
+		*/
 
 		//FBSDKLog: ** WARNING: You are requesting permissions inside the completion block of an existing login.This is unsupported behavior. You should request additional permissions only when they are needed, such as requesting for publish_actionswhen the user performs a sharing action.
 
@@ -143,13 +140,11 @@ class FXDmoduleFacebook: NSObject {
 		debugPrint(presentingScene)
 		debugPrint(FBSDKAccessToken.current())
 
-		debugPrint(self.multiAccountArray as Any)
-
 		//FBSDKLog: starting with Graph API v2.4, GET requests for /me/accounts should contain an explicit "fields" parameter
 		//https://developers.facebook.com/docs/graph-api/reference/user/
 
 
-		self.multiAccountArray = []
+		var multiAccount: Array<Dictionary<String, Any>> = []
 
 		let graphRequestMe = FBSDKGraphRequest(
 			graphPath: facebookGraphMe,
@@ -176,24 +171,31 @@ class FXDmoduleFacebook: NSObject {
 				var modified = result as! Dictionary<String, Any>
 				modified["category"] = "TIMELINE"
 
-				self?.multiAccountArray?.append(modified as Any)
-				debugPrint(self?.multiAccountArray as Any)
+				multiAccount.append(modified)
+				debugPrint(multiAccount)
 
 
 				//MARK://TODO: Until page updating is approved, just provide Timeline update only
 				//self.requestAccountsWith(presentingScene: presentingScene, callback: callback)
 
-				self?.presentActionSheet(withAccounts: self?.multiAccountArray,
+				self?.presentActionSheet(withAccounts: multiAccount,
 				                         presentingScene: presentingScene,
 				                         callback: callback)
 		})
 	}
 
-	func presentActionSheet(withAccounts accounts:Array<Any>?, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	func presentActionSheet(withAccounts multiAccount:Array<Dictionary<String, Any>>?, presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(accounts as Any)
+		debugPrint(multiAccount as Any)
 		debugPrint(presentingScene)
-		debugPrint(self.multiAccountArray as Any)
+
+		guard multiAccount != nil && multiAccount!.count > 0 else {
+			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Facebook account", comment: ""),
+			                              message: self.reasonForConnecting)
+
+			callback(false, NSNull())
+			return
+		}
 
 
 		let actionsheetTitle = NSLocalizedString("Please select your Facebook Timeline or Page", comment:"")
@@ -206,7 +208,7 @@ class FXDmoduleFacebook: NSObject {
 		let cancelAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel) {
-				[weak self] (action:UIAlertAction) in
+				[weak self] (action: UIAlertAction) in
 
 				callback(false, NSNull())
 		}
@@ -214,7 +216,7 @@ class FXDmoduleFacebook: NSObject {
 		let signOutAction = UIAlertAction(
 			title: NSLocalizedString("Sign Out", comment: ""),
 			style: .destructive) {
-				[weak self] (action:UIAlertAction) in
+				[weak self] (action: UIAlertAction) in
 
 				//MARK://TODO: resetCredential: Sign Out
 
@@ -225,10 +227,10 @@ class FXDmoduleFacebook: NSObject {
 		alertController.addAction(signOutAction)
 
 
-		for account in accounts! {
-			var buttonTitle: String = (account as! Dictionary<String, Any>)["category"] as! String
+		for account in multiAccount! {
+			var buttonTitle: String = account["category"] as! String
 			buttonTitle.append(": ")
-			buttonTitle.append((account as! Dictionary<String, Any>)["name"] as! String)
+			buttonTitle.append(account["name"] as! String)
 
 			let selectAction = UIAlertAction(
 				title: buttonTitle,
@@ -236,13 +238,10 @@ class FXDmoduleFacebook: NSObject {
 				handler: {
 					[weak self] (action:UIAlertAction) in
 
-					UserDefaults.standard.set(
-						account,
-						forKey: userdefaultObjMainFacebookAccountIdentifier)
+					UserDefaults.standard.set(account, forKey: userdefaultObjMainFacebookAccountIdentifier)
 					UserDefaults.standard.synchronize()
 
-
-					self?.currentFacebookAccount = account as? Dictionary
+					self?.currentFacebookAccount = account
 
 					callback(true, account)
 			})
@@ -284,21 +283,21 @@ class FXDmoduleFacebook: NSObject {
 				}
 
 
-				let accounts: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
-				debugPrint(accounts)
+				let multiAccount: Array<Any> = (result as! Dictionary<String, Any>)["data"] as! Array
+				debugPrint(multiAccount)
 
-				guard accounts.count > 0 else {
+				guard multiAccount.count > 0 else {
 					callback(false, NSNull())
 					return
 				}
 
 
-				var collectedPages: Array<Any> = []
+				var collectedPages: Array<Dictionary<String, Any>> = []
 
 				let batchConnection = FBSDKGraphRequestConnection()
 				batchConnection.delegate = self
 
-				for account in accounts {
+				for account in multiAccount {
 					let facebookGraphPage: String = (account as! Dictionary<String, Any>)["id"] as! String
 
 					let graphRequestPage = FBSDKGraphRequest(
@@ -317,7 +316,7 @@ class FXDmoduleFacebook: NSObject {
 								var modified = result as! Dictionary<String, Any>
 								modified["category"] = "PAGE"
 
-								collectedPages.append(modified as Any)
+								collectedPages.append(modified)
 							}
 					})
 				}
@@ -333,7 +332,6 @@ class FXDmoduleFacebook: NSObject {
 					[weak self] (shouldContinue: Bool) in
 
 					debugPrint(shouldContinue)
-					debugPrint(self?.multiAccountArray as Any)
 					debugPrint(collectedPages)
 
 					guard shouldContinue else {
@@ -342,9 +340,9 @@ class FXDmoduleFacebook: NSObject {
 					}
 
 
-					self?.multiAccountArray?.append(contentsOf: collectedPages)
+					//MARK://TODO: How to combine accounts and pages?
 
-					self?.presentActionSheet(withAccounts: self?.multiAccountArray,
+					self?.presentActionSheet(withAccounts: collectedPages,
 					                         presentingScene: presentingScene,
 					                         callback: callback)
 				}

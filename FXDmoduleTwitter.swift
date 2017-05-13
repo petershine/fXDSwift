@@ -26,11 +26,7 @@ class FXDmoduleTwitter: NSObject {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierTwitter)
 	}()
 
-	lazy var multiAccountArray: Array<Any>? = {
-		return self.mainAccountStore.accounts(with:self.mainAccountType)
-	}()
-
-
+	
 	lazy var currentMainAccount: ACAccount? = {
 		var mainAccount: ACAccount? = nil
 
@@ -101,9 +97,10 @@ class FXDmoduleTwitter: NSObject {
 
 	func showActionSheet(fromPresentingScene presentingScene: UIViewController, typeIdentifier: String = ACAccountTypeIdentifierTwitter, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(self.multiAccountArray as Any)
+		let multiAccount: [ACAccount] = self.mainAccountStore.accounts(with:self.mainAccountType) as! [ACAccount]
+		debugPrint(multiAccount)
 
-		guard self.multiAccountArray != nil && self.multiAccountArray!.count > 0 else {
+		guard multiAccount.count > 0 else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
 			                              message: self.reasonForConnecting)
 
@@ -122,8 +119,6 @@ class FXDmoduleTwitter: NSObject {
 			style: .cancel) {
 				[weak self] (action: UIAlertAction) in
 
-				//MARK://TODO: self.multiAccountArray = nil
-
 				callback(false, NSNull())
 		}
 		
@@ -136,10 +131,7 @@ class FXDmoduleTwitter: NSObject {
 				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
 				UserDefaults.standard.synchronize()
 
-				//MARK://TODO:
 				self?.currentMainAccount = nil
-
-				//MARK://TODO: self.multiAccountArray = nil
 
 				callback(true, NSNull())
 		}
@@ -148,7 +140,7 @@ class FXDmoduleTwitter: NSObject {
 		alertController.addAction(signOutAction)
 
 
-		for account: ACAccount in self.multiAccountArray as! [ACAccount] {
+		for account: ACAccount in multiAccount {
 
 			let selectAction: UIAlertAction = UIAlertAction(
 				title: String("@\(account.username!)"),
@@ -156,15 +148,11 @@ class FXDmoduleTwitter: NSObject {
 				handler: {
 					[weak self] (action: UIAlertAction) in
 
-					//MARK://TODO:
 					self?.currentMainAccount = account
 					debugPrint(self?.currentMainAccount as Any)
 
-
 					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
 					UserDefaults.standard.synchronize()
-
-					//MARK://TODO: self.multiAccountArray = nil
 
 					callback(true, NSNull())
 			})
