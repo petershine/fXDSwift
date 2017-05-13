@@ -22,32 +22,18 @@ func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#endif
 }
 
-/*
-func FXDLog_SEPARATE(_ file: NSString = #file, function: NSString = #function) {
+func FXDLog_SEPARATE(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
-		debugPrint("\n\n    [\(file.lastPathComponent) \(function)]")
+		if #available(iOS 10.0, *) {
+			os_log(" ")
+			os_log("\n\n[%@ %@]", (filename as NSString).lastPathComponent, function)
+		} else {
+			// Fallback on earlier versions
+			debugPrint(" ")
+			debugPrint("\n\n[\((filename as NSString).lastPathComponent) \(function)]")
+		}
 	#endif
 }
-
-func FXDLog(_ obj: Any?) {
-	#if ForDEVELOPER
-		debugPrint("\(String(describing: obj))")
-	#endif
-}
-
-func FXDLog_Observed(_ obj: Any?) {
-	#if ForDEVELOPER
-		debugPrint("_Observed: \(String(describing: obj))")
-	#endif
-}
-
-func FXDLog_OVERRIDE() {
-	#if ForDEVELOPER
-		FXDLog("SHOULD OVERRIDE")
-	#endif
-}
-*/
-
 
 
 //MARK: Closures

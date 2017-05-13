@@ -6,13 +6,13 @@ import Foundation
 
 class FXDViewController: UIViewController {
 
+	deinit {	//MARK: Useful for checking if this instance is correctly deleted
+		FXDLog_SEPARATE()
+	}
+
 	override func didReceiveMemoryWarning() {	FXDLog_SEPARATE()
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
-	}
-
-	deinit {	FXDLog_SEPARATE()
-		//MARK: Useful for checking if this instance is correctly deleted
 	}
 
 

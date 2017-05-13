@@ -15,7 +15,6 @@ extension UIAlertController {
 		//NOTE: Assume this is the condition for simple alerting without choice
 		let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-		//*** Assertion failure in +[UIAlertAction _actionWithTitle:descriptiveText:image:style:handler:shouldDismissHandler:], /BuildRoot/Library/Caches/com.apple.xbs/Sources/UIKit_Sim/UIKit-3600.7.47/UIAlertAction.m:26
 		let cancelAction: UIAlertAction = UIAlertAction(title: cancelTitle,
 		                                                style: .cancel,
 		                                                handler: handler)

@@ -22,11 +22,10 @@ let objkeyVideoTitle = "title"
 
 class FXDmoduleYoutube: NSObject {
 
-	var apikeyGoogleForiOSapp:String?
-	var apikeyGoogleForBrowser:String?
+	var apikeyGoogleForBrowser: String?
 
 
-	func searchYouTubeUsing(artist:String?, song:String?, album:String?, callback:@escaping FXDcallback) {	FXDLog_Func()
+	func searchYouTubeUsing(artist: String?, song: String?, album: String?, callback:@escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(artist as Any)
 		debugPrint(song as Any)
@@ -36,6 +35,12 @@ class FXDmoduleYoutube: NSObject {
 		debugPrint(query)
 
 		guard  query.trimmingCharacters(in: .whitespacesAndNewlines).characters.count > 0 else {
+			callback(false, NSNull())
+			return
+		}
+
+
+		guard self.apikeyGoogleForBrowser != nil else {
 			callback(false, NSNull())
 			return
 		}
