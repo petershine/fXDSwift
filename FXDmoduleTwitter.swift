@@ -195,11 +195,11 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func renewAccountCredential(_ callback: @escaping FXDcallback) {	FXDLog_Func()
+	func didRenewAccountCredential(_ callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		debugPrint(self.currentMainAccount as Any)
 
-		guard self.currentMainAccount != nil else {
+		guard self.currentMainAccount == nil else {
 			callback(true, NSNull())
 			return
 		}
@@ -227,13 +227,16 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential({
+		self.didRenewAccountCredential({
 			[weak self] (shouldRequest: Bool?, nothing: Any?) in
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
 			let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
 
-			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, url: requestURL, parameters: parameters)
+			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter,
+			                                          requestMethod: .GET,
+			                                          url: requestURL,
+			                                          parameters: parameters)
 
 			defaultRequest.account = self?.currentMainAccount
 
@@ -259,20 +262,23 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		self.renewAccountCredential({
-			[weak self] (shouldRequest: Bool, nothing: Any) in
+		self.didRenewAccountCredential({
+			[weak self] (shouldContinue: Bool, nothing: Any) in
 
-			guard shouldRequest else {
+			debugPrint(shouldContinue)
+
+			guard shouldContinue else {
 				callback(false, NSNull())
 				return
 			}
 
 
 			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/statuses/update.json")!
+
 			var parameters: Dictionary<String, Any> = [objkeyTwitterStatus: tweetText ?? ""]
+			parameters[objkeyTwitterDisplayCoordinates] = "true"
 
 			if latitude != 0.0 && longitude != 0.0 {
-				parameters[objkeyTwitterDisplayCoordinates] = "true"
 				parameters[objkeyTwitterLat] = latitude
 				parameters[objkeyTwitterLong] = longitude
 			}
@@ -303,3 +309,31 @@ class FXDmoduleTwitter: NSObject {
 		})
 	}
 }
+
+
+//SAMPLE
+/*
+<NSHTTPURLResponse: 0x1766314a0> { URL: https://api.twitter.com/1.1/statuses/update.json } { status code: 200, headers {
+	"Cache-Control" = "no-cache, no-store, must-revalidate, pre-check=0, post-check=0";
+	"Content-Disposition" = "attachment; filename=json.json";
+	"Content-Encoding" = gzip;
+	"Content-Type" = "application/json;charset=utf-8";
+	Date = "Tue, 16 May 2017 15:47:18 GMT";
+	Expires = "Tue, 31 Mar 1981 05:00:00 GMT";
+	"Last-Modified" = "Tue, 16 May 2017 15:47:18 GMT";
+	Pragma = "no-cache";
+	Server = "tsa_b";
+	"Set-Cookie" = "lang=en; Path=/";
+	Status = "200 OK";
+	"Strict-Transport-Security" = "max-age=631138519";
+	"x-access-level" = "read-write";
+	"x-connection-hash" = a40778e45c427ca3d4e09d8ede483dec;
+	"x-content-type-options" = nosniff;
+	"x-frame-options" = SAMEORIGIN;
+	"x-response-time" = 271;
+	"x-transaction" = 0073b35900912373;
+	"x-tsa-request-body-time" = 1;
+	"x-twitter-response-tags" = BouncerCompliant;
+	"x-xss-protection" = "1; mode=block";
+} }
+*/
