@@ -282,7 +282,10 @@ class FXDmoduleTwitter: NSObject {
 			}
 
 
-			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter, requestMethod: .GET, url: requestURL, parameters: parameters)
+			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter,
+			                                          requestMethod: .POST,
+			                                          url: requestURL,
+			                                          parameters: parameters)
 
 			defaultRequest.account = self?.currentMainAccount
 
