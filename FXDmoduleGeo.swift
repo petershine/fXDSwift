@@ -27,10 +27,10 @@ class FXDmoduleGeo: NSObject {
 
 
 	func startGeoModule() {	FXDLog_Func()
-		debugPrint(CLLocationManager.locationServicesEnabled().description)
-		debugPrint(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
-		debugPrint(CLLocationManager.isRangingAvailable().description)
-		debugPrint(CLLocationManager.deferredLocationUpdatesAvailable().description)
+		FXDLog(CLLocationManager.locationServicesEnabled().description)
+		FXDLog(CLLocationManager.significantLocationChangeMonitoringAvailable().description)
+		FXDLog(CLLocationManager.isRangingAvailable().description)
+		FXDLog(CLLocationManager.deferredLocationUpdatesAvailable().description)
 
 		guard CLLocationManager.locationServicesEnabled() != false else {
 			return
@@ -54,7 +54,7 @@ class FXDmoduleGeo: NSObject {
 
 
 		let status = CLLocationManager.authorizationStatus()
-		debugPrint(String(status.rawValue))
+		FXDLog(String(status.rawValue))
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
 			self.startLocationManager(self.mainLocationManager)
@@ -74,7 +74,7 @@ class FXDmoduleGeo: NSObject {
 		}
 		
 
-		debugPrint(self.didStartLocationManager as Any)
+		FXDLog(self.didStartLocationManager as Any)
 
 		guard self.didStartLocationManager != true else {
 			return
@@ -126,27 +126,27 @@ class FXDmoduleGeo: NSObject {
 		geocoder.reverseGeocodeLocation((self.mainLocationManager?.location)!) {
 			[weak self] (placemarks, error) in
 
-			debugPrint(error as Any)
+			FXDLog(error as Any)
 
-			debugPrint(placemarks as Any)
+			FXDLog(placemarks as Any)
 			
 		}
 	}
 
 
 	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	FXDLog_Func()
-		debugPrint(notification)
+		FXDLog(notification)
 
 		self.mainLocationManager?.desiredAccuracy = kCLLocationAccuracyBest
-		debugPrint(self.mainLocationManager?.desiredAccuracy as Any)
+		FXDLog(self.mainLocationManager?.desiredAccuracy as Any)
 	}
 
 	func observedUIApplicationDidEnterBackground(_ notification: Notification) {
 		FXDLog_Func()
-		debugPrint(notification)
+		FXDLog(notification)
 
 		self.mainLocationManager?.desiredAccuracy = kCLLocationAccuracyThreeKilometers*2.0
-		debugPrint(self.mainLocationManager?.desiredAccuracy as Any)
+		FXDLog(self.mainLocationManager?.desiredAccuracy as Any)
 	}
 }
 
@@ -154,7 +154,7 @@ extension FXDmoduleGeo: CLLocationManagerDelegate {
 	
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {	FXDLog_Func()
 
-		debugPrint(String(status.rawValue))
+		FXDLog(String(status.rawValue))
 
 
 		if (status == .authorizedAlways || status == .authorizedWhenInUse) {
@@ -173,7 +173,7 @@ extension FXDmoduleGeo: CLLocationManagerDelegate {
 		*/
 
 		self.lastLocation = locations.last
-		debugPrint(self.lastLocation as Any)
+		FXDLog(self.lastLocation as Any)
 
 		self.lastLocationObserver.send(value: self.lastLocation!)
 		//		}

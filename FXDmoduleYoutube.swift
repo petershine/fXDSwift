@@ -27,12 +27,12 @@ class FXDmoduleYoutube: NSObject {
 
 	func searchYouTubeUsing(artist: String?, song: String?, album: String?, callback:@escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(artist as Any)
-		debugPrint(song as Any)
-		debugPrint(album as Any)
+		FXDLog(artist as Any)
+		FXDLog(song as Any)
+		FXDLog(album as Any)
 
 		let query: String = "\(artist ?? "") \(song ?? "") \(album ?? "")"
-		debugPrint(query)
+		FXDLog(query)
 
 		guard  query.trimmingCharacters(in: .whitespacesAndNewlines).characters.count > 0 else {
 			callback(false, NSNull())
@@ -47,20 +47,20 @@ class FXDmoduleYoutube: NSObject {
 
 
 		let percentEscaped = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-		debugPrint(percentEscaped)
+		FXDLog(percentEscaped)
 
 		let formattedString = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=\(percentEscaped))&key=\(self.apikeyGoogleForBrowser!)"
-		debugPrint(formattedString)
+		FXDLog(formattedString)
 
 		let request = URLRequest(url: URL(string: formattedString)!)
-		debugPrint(request)
+		FXDLog(request)
 
 		let searchTask = URLSession.shared.dataTask(with: request) {
 			[weak self] (data:Data?, response:URLResponse?, error:Error?) in
 
-			debugPrint(data as Any)
-			debugPrint(response as Any)
-			debugPrint(error as Any)
+			FXDLog(data as Any)
+			FXDLog(response as Any)
+			FXDLog(error as Any)
 
 
 			var results:Array<Any>?

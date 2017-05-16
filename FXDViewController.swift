@@ -31,10 +31,10 @@ class FXDViewController: UIViewController {
 	override func viewDidLoad() {	FXDLog_Func()
 		super.viewDidLoad()
 
-		debugPrint(self.storyboard as Any)
-		debugPrint(self.nibName as Any)
-		debugPrint(self.title as Any)
-		debugPrint(self.parent as Any)
+		FXDLog(self.storyboard as Any)
+		FXDLog(self.nibName as Any)
+		FXDLog(self.title as Any)
+		FXDLog(self.parent as Any)
 	}
 
 	//1
@@ -58,9 +58,9 @@ class FXDViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {	FXDLog_Func()
 		super.viewDidAppear(animated)
 
-		debugPrint(self.storyboard as Any)
-		debugPrint(self.nibName as Any)
-		debugPrint(self.title as Any)
-		debugPrint(self.parent as Any)
+		FXDLog(self.storyboard as Any)
+		FXDLog(self.nibName as Any)
+		FXDLog(self.title as Any)
+		FXDLog(self.parent as Any)
 	}
 }

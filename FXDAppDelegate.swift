@@ -17,7 +17,7 @@ class FXDAppDelegate: UIResponder {
 	override init() {	FXDLog_SEPARATE()
 		super.init()
 
-		debugPrint(Bundle.main.infoDictionary as Any)
+		FXDLog(Bundle.main.infoDictionary as Any)
 	}
 }
 
@@ -25,19 +25,19 @@ class FXDAppDelegate: UIResponder {
 extension FXDAppDelegate: UIApplicationDelegate {
 
 	public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {	FXDLog_SEPARATE()
-		debugPrint(url)
-		debugPrint(options)
+		FXDLog(url)
+		FXDLog(options)
 
 		return true
 	}
 
 	public func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {	FXDLog_SEPARATE()
-		debugPrint(launchOptions as Any)
+		FXDLog(launchOptions as Any)
 
 		return true
 	}
 	public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {	FXDLog_SEPARATE()
-		debugPrint(launchOptions as Any)
+		FXDLog(launchOptions as Any)
 
 		// Override point for customization after application launch.
 

@@ -56,8 +56,8 @@ class FXDmoduleTwitter: NSObject {
 
 	func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(self.mainAccountType?.accountTypeDescription as Any)
-		debugPrint(self.mainAccountType?.accessGranted as Any)
+		FXDLog(self.mainAccountType?.accountTypeDescription as Any)
+		FXDLog(self.mainAccountType?.accessGranted as Any)
 
 
 		func GrantedAccess() -> Void {
@@ -96,7 +96,7 @@ class FXDmoduleTwitter: NSObject {
 	func showActionSheet(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		let multiAccount: [ACAccount] = self.mainAccountStore.accounts(with:self.mainAccountType) as! [ACAccount]
-		debugPrint(multiAccount)
+		FXDLog(multiAccount)
 
 		guard multiAccount.count > 0 else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
@@ -147,7 +147,7 @@ class FXDmoduleTwitter: NSObject {
 					[weak self] (action: UIAlertAction) in
 
 					self?.currentMainAccount = account
-					debugPrint(self?.currentMainAccount as Any)
+					FXDLog(self?.currentMainAccount as Any)
 
 					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
 					UserDefaults.standard.synchronize()
@@ -197,7 +197,7 @@ class FXDmoduleTwitter: NSObject {
 
 	func didRenewAccountCredential(_ callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(self.currentMainAccount as Any)
+		FXDLog(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount == nil else {
 			callback(true, NSNull())
@@ -208,8 +208,8 @@ class FXDmoduleTwitter: NSObject {
 		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) {
 			[weak self] (renewResult:ACAccountCredentialRenewResult, error:Error?) in
 
-			debugPrint(renewResult)
-			debugPrint(error as Any)
+			FXDLog(renewResult)
+			FXDLog(error as Any)
 
 			callback(renewResult == .renewed, NSNull())
 		}
@@ -220,7 +220,7 @@ class FXDmoduleTwitter: NSObject {
 	//MARK: Twitter specific
 	func twitterUserShow(withScreenName screenName: String) {	FXDLog_Func()
 
-		debugPrint(self.currentMainAccount as Any)
+		FXDLog(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount != nil else {
 			return
@@ -243,9 +243,9 @@ class FXDmoduleTwitter: NSObject {
 			defaultRequest.perform(handler: {
 				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
-				debugPrint(responseData as Any)
-				debugPrint(urlResponse as Any)
-				debugPrint(error as Any)
+				FXDLog(responseData as Any)
+				FXDLog(urlResponse as Any)
+				FXDLog(error as Any)
 
 				//MARK://TODO: Reconsider bring evaluation to be more generic function
 			})
@@ -254,7 +254,7 @@ class FXDmoduleTwitter: NSObject {
 
 	func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		debugPrint(self.currentMainAccount as Any)
+		FXDLog(self.currentMainAccount as Any)
 
 		guard self.currentMainAccount != nil else {
 			callback(false, NSNull())
@@ -265,7 +265,7 @@ class FXDmoduleTwitter: NSObject {
 		self.didRenewAccountCredential({
 			[weak self] (shouldContinue: Bool, nothing: Any) in
 
-			debugPrint(shouldContinue)
+			FXDLog(shouldContinue)
 
 			guard shouldContinue else {
 				callback(false, NSNull())
@@ -298,9 +298,9 @@ class FXDmoduleTwitter: NSObject {
 			defaultRequest.perform(handler: {
 				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
-				debugPrint(responseData as Any)
-				debugPrint(urlResponse as Any)
-				debugPrint(error as Any)
+				FXDLog(responseData as Any)
+				FXDLog(urlResponse as Any)
+				FXDLog(error as Any)
 
 				//MARK://TODO: Reconsider bringing evaluation to be more generic function
 

@@ -30,7 +30,7 @@ class FXDmoduleMedia: NSObject {
 	func startObservingMediaNotifications() {	FXDLog_Func()
 
 		//MARK: Intentional. Can't use mediaModule(musicPlayer) in simulator after all
-		debugPrint("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
+		FXDLog("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
 		guard TARGET_OS_SIMULATOR == 0 else {
 			return
 		}
@@ -62,13 +62,13 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	@objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-		debugPrint(self.musicPlayer?.playbackState.rawValue as Any)
+		FXDLog(self.musicPlayer?.playbackState.rawValue as Any)
 	}
 
 	@objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 
-		debugPrint(self.musicPlayer?.nowPlayingItem?.title as Any)
-		debugPrint(self.lastMediaItem?.title as Any)
+		FXDLog(self.musicPlayer?.nowPlayingItem?.title as Any)
+		FXDLog(self.lastMediaItem?.title as Any)
 
 
 		/*
@@ -76,7 +76,7 @@ class FXDmoduleMedia: NSObject {
 */
 
 			//self.lastMediaItem = self.musicPlayer.nowPlayingItem
-			//debugPrint(self.lastMediaItem)
+			//FXDLog(self.lastMediaItem)
 
 
 			//MARK: It's responsibility of the developer to control repeated item
@@ -85,6 +85,6 @@ class FXDmoduleMedia: NSObject {
 	}
 
 	@objc func observedMPMediaLibraryDidChange(_ notification: Notification) {
-		debugPrint(MPMediaLibrary.default().lastModifiedDate)
+		FXDLog(MPMediaLibrary.default().lastModifiedDate)
 	}
 }
