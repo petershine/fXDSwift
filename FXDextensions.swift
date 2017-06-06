@@ -13,11 +13,13 @@ extension UIAlertController {
 	                        handler: ((UIAlertAction) -> Swift.Void)? = nil) {
 
 		//NOTE: Assume this is the condition for simple alerting without choice
-		let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+		let alert = UIAlertController(title: title,
+		                              message: message,
+		                              preferredStyle: .alert)
 
-		let cancelAction: UIAlertAction = UIAlertAction(title: cancelTitle,
-		                                                style: .cancel,
-		                                                handler: handler)
+		let cancelAction = UIAlertAction(title: cancelTitle,
+		                                 style: .cancel,
+		                                 handler: handler)
 
 		alert.addAction(cancelAction)
 
