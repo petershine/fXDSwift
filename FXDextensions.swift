@@ -5,14 +5,15 @@ import Foundation
 
 
 extension UIAlertController {
-
-	//MARK: Re-consider about returning like similar original method
+    
+	//FIXME: Re-consider about returning like similar original method
 	static func simpleAlert(withTitle title: String?,
 	                        message: String?,
 	                        cancelTitle: String? = NSLocalizedString("OK", comment: ""),
 	                        handler: ((UIAlertAction) -> Swift.Void)? = nil) {
 
-		//NOTE: Assume this is the condition for simple alerting without choice
+	
+        //MARK: Assume this is the condition for simple alerting without choice
 		let alert = UIAlertController(title: title,
 		                              message: message,
 		                              preferredStyle: .alert)
