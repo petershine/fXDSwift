@@ -1,10 +1,4 @@
-//
-//  FXDmoduleYoutube.swift
-//
-//
-//  Created by petershine on 3/29/17.
-//  Copyright © 2017 fXceed. All rights reserved.
-//
+
 
 import UIKit
 import Foundation
