@@ -5,16 +5,16 @@ import Foundation
 import os.log
 
 
-// @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
+//MARK: @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
 
-//MARK://TODO: Adopt better debugging
+//FIXME: Adopt better debugging
 
 func FXDLog(_ items: Any..., separator: String = " ", terminator: String = "\n") {
 	#if ForDEVELOPER
 		debugPrint(items, separator: separator, terminator: terminator)
 
+        //FIXME: How to use os_log for general cases?
 		if #available(iOS 10.0, *) {
-			//MARK://TODO: How to use os_log for general cases?
 		} else {
 		}
 	#endif
@@ -46,6 +46,6 @@ func FXDLog_SEPARATE(_ filename: String = #file, function: String = #function) {
 
 
 //MARK: Closures
-// Until interoperability allows this closure with optionals.
-//typealias FXDcallback = (Bool?, Any?) -> Void
+//Use it until interoperability allows this closure with optionals.
+//e.g. typealias FXDcallback = (Bool?, Any?) -> Void
 typealias FXDcallback = (Bool, Any) -> Void

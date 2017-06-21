@@ -9,7 +9,7 @@ import Accounts
 import CoreLocation
 
 
-//MARK://TODO: Prepare formatter function
+//FIXME: Prepare formatter function
 //#define urlrootTwitterAPI			@"https://api.twitter.com/1.1/"
 //#define urlstringTwitter(method)	[NSString stringWithFormat:@"%@%@", urlrootTwitterAPI, method]
 //#define urlstringTwitterUserShow		urlstringTwitter(@"users/show.json")
@@ -247,7 +247,7 @@ class FXDmoduleTwitter: NSObject {
 				FXDLog(urlResponse as Any)
 				FXDLog(error as Any)
 
-				//MARK://TODO: Reconsider bring evaluation to be more generic function
+				//FIXME: Reconsider bring evaluation to be more generic function
 			})
 		})
 	}
@@ -302,7 +302,7 @@ class FXDmoduleTwitter: NSObject {
 				FXDLog(urlResponse as Any)
 				FXDLog(error as Any)
 
-				//MARK://TODO: Reconsider bringing evaluation to be more generic function
+				//FIXME: Reconsider bringing evaluation to be more generic function
 
 				callback(error == nil, NSNull())
 			})

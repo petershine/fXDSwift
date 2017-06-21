@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import FBSDKShareKit
 
 
-//MARK://TODO: Prepare formatter function
+//FIXME: Prepare formatter function
 //#define urlrootFacebookAPI	@"https://graph.facebook.com/"
 //#define urlhostFacebookVideoGraph	@"https://graph-video.facebook.com/"
 //#define urlstringFacebook(method)	[NSString stringWithFormat:@"%@%@", urlrootFacebookAPI, method]
@@ -169,7 +169,7 @@ class FXDmoduleFacebook: NSObject {
 				FXDLog(multiAccount)
 
 
-				//MARK://TODO: Until page updating is approved, just provide Timeline update only
+				//FIXME: Until page updating is approved, just provide Timeline update only
 				//self.requestAccountsWith(presentingScene: presentingScene, callback: callback)
 
 				self?.presentActionSheet(multiAccount: multiAccount,
@@ -212,7 +212,7 @@ class FXDmoduleFacebook: NSObject {
 			style: .destructive) {
 				[weak self] (action: UIAlertAction) in
 
-				//MARK://TODO: resetCredential: Sign Out
+				//FIXME: resetCredential: Sign Out
 
 				callback(true, NSNull())
 		}
@@ -334,7 +334,7 @@ class FXDmoduleFacebook: NSObject {
 					}
 
 
-					//MARK://TODO: How to combine accounts and pages?
+					//FIXME: How to combine accounts and pages?
 
 					self?.presentActionSheet(multiAccount: collectedPages,
 					                         presentingScene: presentingScene,
