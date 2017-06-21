@@ -61,11 +61,11 @@ class FXDmoduleMedia: NSObject {
 		MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
 	}
 
-	@objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
+	func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
 		FXDLog(self.musicPlayer?.playbackState.rawValue as Any)
 	}
 
-	@objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
+	func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
 
 		FXDLog(self.musicPlayer?.nowPlayingItem?.title as Any)
 		FXDLog(self.lastMediaItem?.title as Any)
@@ -74,7 +74,6 @@ class FXDmoduleMedia: NSObject {
 		/*
 		if (self.lastMediaItem == nil || self.musicPlayer.nowPlayingItem?.title == self.lastMediaItem?.title) {
 */
-
 			//self.lastMediaItem = self.musicPlayer.nowPlayingItem
 			//FXDLog(self.lastMediaItem)
 
@@ -84,7 +83,7 @@ class FXDmoduleMedia: NSObject {
 //		}
 	}
 
-	@objc func observedMPMediaLibraryDidChange(_ notification: Notification) {
+	func observedMPMediaLibraryDidChange(_ notification: Notification) {
 		FXDLog(MPMediaLibrary.default().lastModifiedDate)
 	}
 }
