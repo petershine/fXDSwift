@@ -25,9 +25,8 @@ class FXDmoduleTwitter: NSObject {
 	lazy var mainAccountType: ACAccountType? = {
 		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierTwitter)
 	}()
-
-
-	lazy var currentMainAccount: ACAccount? = {
+    
+    @objc lazy var currentMainAccount: ACAccount? = {
 		var mainAccount: ACAccount? = nil
 
 		let accountObjKey: String = userdefaultObjMainTwitterAccountIdentifier
@@ -54,7 +53,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-	func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		FXDLog(self.mainAccountType?.accountTypeDescription as Any)
 		FXDLog(self.mainAccountType?.accessGranted as Any)
@@ -252,7 +251,7 @@ class FXDmoduleTwitter: NSObject {
 		})
 	}
 
-	func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
+	@objc func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		FXDLog(self.currentMainAccount as Any)
 

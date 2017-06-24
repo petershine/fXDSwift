@@ -29,7 +29,7 @@ class FXDmoduleFacebook: NSObject {
 	}()
 
 
-	lazy var currentFacebookAccount: Dictionary<String, Any>? =  {
+	@objc lazy var currentFacebookAccount: Dictionary<String, Any>? =  {
 		return UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
 	}()
 
@@ -53,7 +53,7 @@ class FXDmoduleFacebook: NSObject {
 
 
 
-	func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
+	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		FXDLog(presentingScene)
 		FXDLog(FBSDKAccessToken.current())
@@ -345,7 +345,7 @@ class FXDmoduleFacebook: NSObject {
 		})
 	}
 
-	func requestToPost(message: String, mediaLink: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, callback: @escaping FXDcallback) {	FXDLog_Func()
+	@objc func requestToPost(message: String, mediaLink: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, callback: @escaping FXDcallback) {	FXDLog_Func()
 
 		self.requestSearch(latitude: latitude, longitude: longitude) {
 			[weak self] (shouldContinue: Bool?, placeId: Any?) in
