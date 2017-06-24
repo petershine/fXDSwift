@@ -14,7 +14,7 @@ let objkeyVideoThumbnail = "thumbnail"
 let objkeyVideoTitle = "title"
 
 
-class FXDmoduleYoutube: NSObject {
+class FXDmoduleYoutube {
 
 	var apikeyGoogleForBrowser: String?
 
@@ -28,7 +28,7 @@ class FXDmoduleYoutube: NSObject {
 		let query: String = "\(artist ?? "") \(song ?? "") \(album ?? "")"
 		FXDLog(query)
 
-		guard  query.trimmingCharacters(in: .whitespacesAndNewlines).characters.count > 0 else {
+		guard  query.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else {
 			callback(false, NSNull())
 			return
 		}
