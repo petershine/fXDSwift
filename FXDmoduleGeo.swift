@@ -7,8 +7,10 @@ import CoreLocation
 import MapKit
 
 import ReactiveSwift
-import ReactiveCocoa
 import Result
+/*
+import ReactiveCocoa
+ */
 
 
 class FXDmoduleGeo {
