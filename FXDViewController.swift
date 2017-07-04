@@ -6,10 +6,6 @@ import Foundation
 
 class FXDViewController: UIViewController {
 
-    var initialBounds: CGRect?
-    var dismissedBlock: FXDcallbackFinish?
-
-
     deinit {    FXDLog_SEPARATE()
         //FIXME: Allow subclass to do it by themselves
         NotificationCenter.default.removeObserver(self)
@@ -67,9 +63,6 @@ class FXDViewController: UIViewController {
 		FXDLog(self.parent as Any)
 
         FXDLog("\(self.view.frame) \(self.view.bounds)")
-
-        //FIXME: Remove any need to use this
-        self.initialBounds = self.view.bounds
 	}
 
 
