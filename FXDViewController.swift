@@ -11,6 +11,7 @@ class FXDViewController: UIViewController {
 
 
     deinit {    FXDLog_SEPARATE()
+        //FIXME: Allow subclass to do it by themselves
         NotificationCenter.default.removeObserver(self)
 	}
 
@@ -56,7 +57,7 @@ class FXDViewController: UIViewController {
 	}
 
 
-    //MARK: VIEW LOADING
+    //MARK: VIEW LOADING Logging
 	override func viewDidLoad() {	FXDLog_Func()
 		super.viewDidLoad()
 
@@ -67,11 +68,12 @@ class FXDViewController: UIViewController {
 
         FXDLog("\(self.view.frame) \(self.view.bounds)")
 
+        //FIXME: Remove any need to use this
         self.initialBounds = self.view.bounds
 	}
 
 
-    //MARK: StatusBar
+    //MARK: StatusBar Logging
     override func setNeedsStatusBarAppearanceUpdate() { FXDLog_Func()
         super.setNeedsStatusBarAppearanceUpdate()
     }
@@ -86,7 +88,7 @@ class FXDViewController: UIViewController {
     }
 
 
-    //MARK: AutoRotating
+    //MARK: AutoRotating Logging
     override var shouldAutorotate: Bool {
         return super.shouldAutorotate
     }
@@ -98,22 +100,7 @@ class FXDViewController: UIViewController {
     }
 
 
-    //MARK: Transition
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {    FXDLog_Func()
-        super.viewWillTransition(to: size, with: coordinator)
-
-        coordinator.animate(alongsideTransition: {
-            (context: UIViewControllerTransitionCoordinatorContext) in
-            self.sceneTransition(for: size, for: coordinator.targetTransform, forDuration: coordinator.transitionDuration, withCallback: nil)
-        }) {
-            (context: UIViewControllerTransitionCoordinatorContext) in
-            //FXDLog_BLOCK(coordinator, @selector(animateAlongsideTransition:completion:));
-            //FXDLog(@"%@ %@ %@ %@", _Size(size), _Object([context containerView]), _Variable([context percentComplete]), _Variable([context completionVelocity]));
-        }
-    }
-
-
-    //MARK: VIEW APPEARING
+    //MARK: VIEW APPEARING Logging
     override func willMove(toParentViewController parent: UIViewController?) {
 
         if (parent == nil) {    FXDLog_Func()
@@ -159,7 +146,7 @@ class FXDViewController: UIViewController {
     }
 
 
-    //MARK: Segues
+    //MARK: Segues Logging
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool { FXDLog_Func()
         // This method is not invoked when -performSegueWithIdentifier:sender: is manually executed.
 
@@ -184,6 +171,8 @@ class FXDViewController: UIViewController {
     }
     override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
         FXDLog_Func()
+
+        //FIXME: Confirm if this is going to be avoidable
         // View controllers will receive this message during segue unwinding. The default implementation returns the result of -respondsToSelector: - controllers can override this to perform any ancillary checks, if necessary.
 
         FXDLog("\(action) \(fromViewController) \(sender)")
@@ -193,12 +182,28 @@ class FXDViewController: UIViewController {
 
         return canPerform
     }
+
+    //MARK: Transition
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {    FXDLog_Func()
+        super.viewWillTransition(to: size, with: coordinator)
+
+        coordinator.animate(alongsideTransition: {
+            (context: UIViewControllerTransitionCoordinatorContext) in
+
+            //FIXME: Replaced. sceneTransition
+        }) {
+            (context: UIViewControllerTransitionCoordinatorContext) in
+            //FXDLog_BLOCK(coordinator, @selector(animateAlongsideTransition:completion:));
+            //FXDLog(@"%@ %@ %@ %@", _Size(size), _Object([context containerView]), _Variable([context percentComplete]), _Variable([context completionVelocity]));
+        }
+    }
 }
 
 extension UIViewController {
+
     @IBAction func dismissSceneForEventSender(sender: Any) {  FXDLog_Func()
 
-        FXDLog("\(self.parent) \(self.presentingViewController)")
+        FXDLog("\(String(describing: self.parent)) \(String(describing: self.presentingViewController))")
 
         if (self.parent != nil) {
             self.parent?.dismiss(animated: true, completion: nil)
@@ -215,14 +220,15 @@ extension UIViewController {
             nibname = String(describing: type(of: self))
         }
 
-        let nib = UINib.init(nibName: nibname, bundle: nił)
+        let nib = UINib.init(nibName: nibname!, bundle: nil)
 
         //MARK: self must be the owner
-        let views: Array = nib.instantiate(self)
+        let views = nib.instantiate(withOwner: self, options: nil)
 
-        let sceneView = views.first
-        FXDLog(sceneView)
+        let sceneView: UIView? = views.first as? UIView
+        FXDLog("\(String(describing: sceneView))")
 
         return sceneView
     }
+
 }
