@@ -6,28 +6,57 @@ import Foundation
 
 class FXDViewController: UIViewController {
 
-	deinit {	//MARK: Useful for checking if this instance is correctly deleted
-		FXDLog_SEPARATE()
+    var initialBounds: CGRect?
+    var dismissedBlock: FXDcallbackFinish?
+
+
+    deinit {    FXDLog_SEPARATE()
+        NotificationCenter.default.removeObserver(self)
 	}
 
 	override func didReceiveMemoryWarning() {	FXDLog_SEPARATE()
 		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
 	}
 
 
+    //MARK: INITIALIZATION
+    //FIXME: Review about need for required init?()
 	required init?(coder aDecoder: NSCoder) {	FXDLog_SEPARATE()
 		super.init(coder: aDecoder)
 	}
-
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {	FXDLog_SEPARATE()
-		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-	}
 
+        var nibname = nibNameOrNil
+
+        if (nibname == nil) {
+            nibname = String(describing: type(of: self))
+        }
+
+        //MARK: Should use nib instead of xib for file type
+        let resourcePath = Bundle.main.path(forResource: nibname, ofType: "nib")
+
+        let nibExists = FileManager.default.fileExists(atPath: resourcePath!)
+
+        if (nibExists == false) {
+            //FIXME: Previously, super class name could be used.
+            nibname = nil
+        }
+
+        FXDLog("\(String(describing: nibname)) \(String(describing: nibBundleOrNil))")
+
+		super.init(nibName: nibname, bundle: nibBundleOrNil)
+        self.awakeFromNib()
+	}
+    override func awakeFromNib() {  FXDLog_Func()
+        super.awakeFromNib()
+        FXDLog("\(String(describing: self.storyboard)) \(String(describing: self.nibName))")
+    }
 	override func loadView() {	FXDLog_Func()
 		super.loadView()
 	}
 
+
+    //MARK: VIEW LOADING
 	override func viewDidLoad() {	FXDLog_Func()
 		super.viewDidLoad()
 
@@ -35,32 +64,165 @@ class FXDViewController: UIViewController {
 		FXDLog(self.nibName as Any)
 		FXDLog(self.title as Any)
 		FXDLog(self.parent as Any)
+
+        FXDLog("\(self.view.frame) \(self.view.bounds)")
+
+        self.initialBounds = self.view.bounds
 	}
 
-	//1
-	override func viewWillAppear(_ animated: Bool) {	FXDLog_Func()
-		super.viewWillAppear(animated)
-	}
 
-	//2
-	override func viewWillLayoutSubviews() {	FXDLog_Func()
-		super.viewWillLayoutSubviews()
+    //MARK: StatusBar
+    override func setNeedsStatusBarAppearanceUpdate() { FXDLog_Func()
+        super.setNeedsStatusBarAppearanceUpdate()
+    }
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return super.preferredStatusBarUpdateAnimation
+    }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return super.preferredStatusBarStyle
+    }
+    override var prefersStatusBarHidden: Bool {
+        return super.prefersStatusBarHidden
+    }
 
-	}
 
-	//3
-	override func viewDidLayoutSubviews() {	FXDLog_Func()
-		super.viewWillLayoutSubviews()
+    //MARK: AutoRotating
+    override var shouldAutorotate: Bool {
+        return super.shouldAutorotate
+    }
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return super.supportedInterfaceOrientations
+    }
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return super.preferredInterfaceOrientationForPresentation
+    }
 
-	}
 
-	//4
-	override func viewDidAppear(_ animated: Bool) {	FXDLog_Func()
-		super.viewDidAppear(animated)
+    //MARK: Transition
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {    FXDLog_Func()
+        super.viewWillTransition(to: size, with: coordinator)
 
-		FXDLog(self.storyboard as Any)
-		FXDLog(self.nibName as Any)
-		FXDLog(self.title as Any)
-		FXDLog(self.parent as Any)
-	}
+        coordinator.animate(alongsideTransition: {
+            (context: UIViewControllerTransitionCoordinatorContext) in
+            self.sceneTransition(for: size, for: coordinator.targetTransform, forDuration: coordinator.transitionDuration, withCallback: nil)
+        }) {
+            (context: UIViewControllerTransitionCoordinatorContext) in
+            //FXDLog_BLOCK(coordinator, @selector(animateAlongsideTransition:completion:));
+            //FXDLog(@"%@ %@ %@ %@", _Size(size), _Object([context containerView]), _Variable([context percentComplete]), _Variable([context completionVelocity]));
+        }
+    }
+
+
+    //MARK: VIEW APPEARING
+    override func willMove(toParentViewController parent: UIViewController?) {
+
+        if (parent == nil) {    FXDLog_Func()
+        }
+
+        super.willMove(toParentViewController: parent)
+    }
+    override func didMove(toParentViewController parent: UIViewController?) {
+        super.didMove(toParentViewController: parent)
+
+        if (parent != nil) {   FXDLog_Func()
+        }
+    }
+    //1
+    override func viewWillAppear(_ animated: Bool) {    FXDLog_Func()
+        super.viewWillAppear(animated)
+    }
+    //2
+    override func viewWillLayoutSubviews() {    FXDLog_Func()
+        super.viewWillLayoutSubviews()
+    }
+    //3
+    override func viewDidLayoutSubviews() {    FXDLog_Func()
+        super.viewWillLayoutSubviews()
+    }
+    //4
+    override func viewDidAppear(_ animated: Bool) {    FXDLog_Func()
+        super.viewDidAppear(animated)
+
+        FXDLog("\(animated)")
+        FXDLog(self.storyboard as Any)
+        FXDLog(self.nibName as Any)
+        FXDLog(self.title as Any)
+        FXDLog(self.parent as Any)
+    }
+    //5
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    //6
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+
+
+    //MARK: Segues
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool { FXDLog_Func()
+        // This method is not invoked when -performSegueWithIdentifier:sender: is manually executed.
+
+        FXDLog("\(String(describing: sender)) \(identifier)")
+
+        let shouldPerform = super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
+        FXDLog("\(shouldPerform)")
+
+        return shouldPerform
+    }
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {   FXDLog_Func()
+
+        FXDLog("\(String(describing: sender)) \(identifier)")
+
+        super.performSegue(withIdentifier: identifier, sender: sender)
+
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) { FXDLog_Func()
+        FXDLog("\(segue.fullDescription)")
+
+        super.prepare(for: segue, sender: sender)
+    }
+    override func canPerformUnwindSegueAction(_ action: Selector, from fromViewController: UIViewController, withSender sender: Any) -> Bool {
+        FXDLog_Func()
+        // View controllers will receive this message during segue unwinding. The default implementation returns the result of -respondsToSelector: - controllers can override this to perform any ancillary checks, if necessary.
+
+        FXDLog("\(action) \(fromViewController) \(sender)")
+
+        let canPerform = super.canPerformUnwindSegueAction(action, from: fromViewController, withSender: sender)
+        FXDLog("\(canPerform)")
+
+        return canPerform
+    }
+}
+
+extension UIViewController {
+    @IBAction func dismissSceneForEventSender(sender: Any) {  FXDLog_Func()
+
+        FXDLog("\(self.parent) \(self.presentingViewController)")
+
+        if (self.parent != nil) {
+            self.parent?.dismiss(animated: true, completion: nil)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+
+    func sceneViewFromNibNameOrNil(nibNameOrNil: String?) -> UIView? {   FXDLog_Func()
+
+        var nibname = nibNameOrNil
+
+        if (nibname == nil) {
+            nibname = String(describing: type(of: self))
+        }
+
+        let nib = UINib.init(nibName: nibname, bundle: nił)
+
+        //MARK: self must be the owner
+        let views: Array = nib.instantiate(self)
+
+        let sceneView = views.first
+        FXDLog(sceneView)
+
+        return sceneView
+    }
 }
