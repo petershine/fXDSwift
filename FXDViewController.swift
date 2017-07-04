@@ -22,6 +22,7 @@ class FXDViewController: UIViewController {
 		super.init(coder: aDecoder)
 	}
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {	FXDLog_SEPARATE()
+        //FIXME: Developer different overriding(overloading)
 
         var nibname = nibNameOrNil
 
@@ -35,13 +36,15 @@ class FXDViewController: UIViewController {
         let nibExists = FileManager.default.fileExists(atPath: resourcePath!)
 
         if (nibExists == false) {
-            //FIXME: Previously, super class name could be used.
+            //FIXME: Try using super class name could be used.
             nibname = nil
         }
 
         FXDLog("\(String(describing: nibname)) \(String(describing: nibBundleOrNil))")
 
 		super.init(nibName: nibname, bundle: nibBundleOrNil)
+
+        //FIXME: Re-consider if this manual execution is necessary
         self.awakeFromNib()
 	}
     override func awakeFromNib() {  FXDLog_Func()
@@ -95,7 +98,6 @@ class FXDViewController: UIViewController {
 
     //MARK: VIEW APPEARING Logging
     override func willMove(toParentViewController parent: UIViewController?) {
-
         if (parent == nil) {    FXDLog_Func()
         }
 
@@ -177,6 +179,7 @@ class FXDViewController: UIViewController {
     }
 
     //MARK: Transition
+    //FIXME: Reconsider if this overriding is needed
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {    FXDLog_Func()
         super.viewWillTransition(to: size, with: coordinator)
 
@@ -192,6 +195,7 @@ class FXDViewController: UIViewController {
     }
 }
 
+//MARK: Find the good way to use extensions
 extension UIViewController {
 
     @IBAction func dismissSceneForEventSender(sender: Any) {  FXDLog_Func()
