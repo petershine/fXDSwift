@@ -405,8 +405,8 @@ class FXDmoduleFacebook: NSObject {
 		let graphRequestSearch = FBSDKGraphRequest(
 			graphPath: "search",
 			parameters: ["type": "place",
-			             "center":String("\(latitude),\(longitude)")!,
-			             "distance":String("\(kCLLocationAccuracyKilometer)")!])
+			             "center":String("\(latitude),\(longitude)"),
+			             "distance":String("\(kCLLocationAccuracyKilometer)")])
 		FXDLog(graphRequestSearch as Any)
 
 		_ = graphRequestSearch?.start(

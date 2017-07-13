@@ -168,7 +168,6 @@ extension FXDmoduleGeo: CLLocationManagerDelegate {
 	}
 
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-
 		/*
 		if (self.lastLocation == nil ||
 		(locations.last?.distance(from: self.lastLocation!))! > 10.0 as CLLocationDistance) {
