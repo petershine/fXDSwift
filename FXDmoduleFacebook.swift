@@ -17,40 +17,19 @@ import FBSDKShareKit
 //#define urlstringFacebook(method)	[NSString stringWithFormat:@"%@%@", urlrootFacebookAPI, method]
 //#define urlstringFacebookVideoGraph(method)	[NSString stringWithFormat:@"%@%@", urlhostFacebookVideoGraph, method]
 
+let userdefaultObjMainFacebookAccountIdentifier: String = "MainFacebookAccountIdentifierObjKey"
+
 
 class FXDmoduleFacebook: NSObject {
 
 	let reasonForConnecting = NSLocalizedString("Please go to device's Settings and add your Facebook account", comment: "")
-
-	let mainAccountStore: ACAccountStore = ACAccountStore()
-
-	lazy var mainAccountType: ACAccountType? = {
-		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierFacebook)
-	}()
-
 
 	@objc lazy var currentFacebookAccount: Dictionary<String, Any>? =  {
 		return UserDefaults.standard.dictionary(forKey: userdefaultObjMainFacebookAccountIdentifier)
 	}()
 
 
-	let initialAccessOptions: [String:Any] = [
-		ACFacebookAppIdKey:	apikeyFacebookAppId,
-		ACFacebookPermissionsKey: [facebookPermissionEmail]
-	]
-
-	let additionalAccessOptions: [String:Any] = [
-		ACFacebookAppIdKey:	apikeyFacebookAppId,
-		ACFacebookPermissionsKey: [facebookPermissionPublicProfile,
-		                           facebookPermissionUserFriends,
-		                           facebookPermissionPublishActions,
-		                           facebookPermissionManagePages,
-		                           facebookPermissionPublishStream],
-		ACFacebookAudienceKey: ACFacebookAudienceEveryone
-	]
-
 	var batchFinishedClosure:((Bool) -> Void)?
-
 
 
 	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
