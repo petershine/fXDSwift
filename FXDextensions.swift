@@ -31,3 +31,23 @@ import Foundation
         rootScene?.present(alert, animated: true, completion: nil)
     }
 }
+
+@objc extension UIView {
+
+	func addGlowingSubview(view: FXDsubviewGlowing?) {
+
+		var glowingSubview: FXDsubviewGlowing? = view
+
+		if glowingSubview == nil {
+			var subviewFrame = self.frame
+			subviewFrame.origin = .zero
+
+			glowingSubview = FXDsubviewGlowing.init(frame: subviewFrame, withGlowing: nil)
+		}
+
+		glowingSubview?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		glowingSubview?.isUserInteractionEnabled = false
+
+		self.addSubview(glowingSubview!)
+	}
+}
