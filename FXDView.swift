@@ -113,3 +113,21 @@ extension UIView {
 	}
 }
 
+
+//MARK: Sub-classes
+typealias FXDcallbackHitIntercept = (_ hitView: UIView?, _ point: CGPoint?, _ event: UIEvent?) -> UIView?
+
+class FXDpassthroughView: UIView {
+	var hitIntercept: FXDcallbackHitIntercept?
+
+	override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+
+		var hitView: UIView = super.hitTest(point, with: event)!
+
+		if self.hitIntercept != nil {
+			hitView = self.hitIntercept!(hitView, point, event)!
+		}
+
+		return hitView
+	}
+}

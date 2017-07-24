@@ -5,6 +5,12 @@ import Foundation
 import os.log
 
 
+//MARK: Closures
+//Use it until interoperability allows this closure with optionals.
+//e.g. typealias FXDcallback = (Bool?, Any?) -> Void
+typealias FXDcallback = (_ result: Bool, _ object: Any) -> Void
+
+
 //MARK: @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
 
 //FIXME: Adopt better debugging
@@ -44,8 +50,3 @@ func FXDLog_SEPARATE(_ filename: String = #file, function: String = #function) {
 	#endif
 }
 
-
-//MARK: Closures
-//Use it until interoperability allows this closure with optionals.
-//e.g. typealias FXDcallback = (Bool?, Any?) -> Void
-typealias FXDcallback = (Bool, Any) -> Void
