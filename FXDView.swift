@@ -92,6 +92,22 @@ extension UIView {
 	}
 }
 
+//MARK: Customized initialization
+@objc extension UIView {
+	static func view(fromNibName nibName: String, owner: Any? = nil) -> Any? {
+		FXDLog_Func()
+
+		FXDLog("nibName: \(String(describing: nibName))")
+
+		let nib: UINib? = UINib.init(nibName:nibName, bundle: nil)
+		FXDLog("nib: \(String(describing: nib))")
+
+		let viewArray = nib?.instantiate(withOwner: owner, options: nil)
+		FXDLog("viewArray: \(String(describing: viewArray))")
+
+		return viewArray?.first
+	}
+}
 
 extension UIView {
 
