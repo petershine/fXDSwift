@@ -6,7 +6,7 @@ import Foundation
 
 @objc extension UIAlertController {
 	//FIXME: Re-consider about returning like similar original method
-	static func simpleAlert(withTitle title: String?,
+	class func simpleAlert(withTitle title: String?,
 	                        message: String? = nil,
 	                        cancelTitle: String? = NSLocalizedString("OK", comment: ""),
 	                        fromScene: UIViewController? = nil,
