@@ -4,8 +4,8 @@ import UIKit
 import Foundation
 
 
-//REFERENCE: https://spin.atomicobject.com/2017/07/18/swift-interface-builder/
 extension UIView {
+	//REFERENCE: https://spin.atomicobject.com/2017/07/18/swift-interface-builder/
 
 	@IBInspectable
 	var cornerRadius: CGFloat {
@@ -92,10 +92,14 @@ extension UIView {
 	}
 }
 
-//MARK: Customized initialization
 @objc extension UIView {
-	static func view(fromNibName nibName: String, owner: Any? = nil) -> Any? {
+
+	class func view(fromNibName nibName: String, owner: Any? = nil) -> Any? {
 		FXDLog_Func()
+
+		//MARK: Customized initialization
+		//FIXME: Should update this method to use Self class, for subclasses.
+		//https://github.com/apple/swift-evolution/blob/master/proposals/0068-universal-self.md
 
 		FXDLog("nibName: \(String(describing: nibName))")
 
@@ -106,6 +110,41 @@ extension UIView {
 		FXDLog("viewArray: \(String(describing: viewArray))")
 
 		return viewArray?.first
+	}
+}
+
+
+//FIXME: declare this as global variable
+let durationAnimation = 0.3
+
+@objc extension UIView {
+	func fadeInFromHidden() {
+		guard (self.isHidden || self.alpha != 1.0) else {
+			return
+		}
+
+		self.alpha = 0.0;
+		self.isHidden = false;
+
+		UIView.animate(withDuration: durationAnimation) {
+			self.alpha = 1.0
+		}
+	}
+
+	func fadeOutThenHidden() {
+		guard (self.isHidden == false) else {
+			return
+		}
+
+		let previousAlpha = self.alpha
+
+		UIView.animate(withDuration: durationAnimation,
+		               animations: {
+						self.alpha = 0.0
+		}) { (didFinish: Bool) in
+			self.isHidden = true
+			self.alpha = previousAlpha
+		}
 	}
 }
 
