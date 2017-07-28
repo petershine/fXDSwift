@@ -146,6 +146,59 @@ let durationAnimation = 0.3
 			self.alpha = previousAlpha
 		}
 	}
+
+	func addAsFadeInSubview(_ subview: UIView?, afterAddedBlock: (() -> Swift.Void)? = nil) {
+
+		guard subview != nil else {
+			afterAddedBlock?()
+			return
+		}
+
+		subview?.alpha = 0.0
+
+		self.addSubview(subview!)
+		self.bringSubview(toFront: subview!)
+
+		UIView.animate(
+			withDuration: durationAnimation,
+			animations: {
+				subview?.alpha = 0.0
+
+		}) { (didFinish: Bool) in
+			afterAddedBlock?()
+		}
+	}
+
+	func removeAsFadeOutSubview(_ subview: UIView?, afterRemovedBlock: (() -> Swift.Void)? = nil) {
+
+		guard subview != nil else {
+			afterRemovedBlock?()
+			return
+		}
+
+		UIView.animate(
+			withDuration: durationAnimation,
+			animations: {
+			subview?.alpha = 0.0
+
+		}) { (didFinish: Bool) in
+			subview?.removeFromSuperview()
+			subview?.alpha = 1.0
+
+			afterRemovedBlock?()
+		}
+	}
+
+	func modifyToCircular() {
+		self.layer.masksToBounds = true
+		self.layer.cornerRadius = self.bounds.size.width/2.0
+	}
+
+	func removeAllSubviews() {
+		for subview in self.subviews {
+			subview.removeFromSuperview()
+		}
+	}
 }
 
 extension UIView {
