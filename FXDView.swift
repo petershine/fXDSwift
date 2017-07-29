@@ -201,23 +201,32 @@ let durationAnimation = 0.3
 	}
 }
 
-extension UIView {
+@objc extension UIView {
+	func superView(ofClassName className: String?) -> Any? {
+		var superView: Any? = nil
 
-	func addGlowingSubview(view: FXDsubviewGlowing?) {
-
-		var glowingSubview: FXDsubviewGlowing? = view
-
-		if glowingSubview == nil {
-			var subviewFrame = self.frame
-			subviewFrame.origin = .zero
-
-			glowingSubview = FXDsubviewGlowing.init(frame: subviewFrame, withGlowing: nil)
+		if self.superview != nil {
+			if String(describing: type(of: self.superview)) == className {
+				superView = self.superView
+			}
+			else {
+				// Recursive call
+				superView = self.superview?.superView(ofClassName: className)
+			}
 		}
 
-		glowingSubview?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		glowingSubview?.isUserInteractionEnabled = false
+		return superView
+	}
+}
 
-		self.addSubview(glowingSubview!)
+@objc extension UIView {
+	func blinkShadowOpacity() {
+		let blinkShadow: CABasicAnimation = CABasicAnimation.init(keyPath: "shadowOpacity")
+		blinkShadow.fromValue = self.layer.shadowOpacity
+		blinkShadow.toValue = 0.0
+		blinkShadow.duration = durationAnimation
+		blinkShadow.autoreverses = true
+		self.layer.add(blinkShadow, forKey: "shadowOpacity")
 	}
 }
 
