@@ -209,23 +209,23 @@ extension UIViewController {
         }
     }
 
-    func sceneViewFromNibNameOrNil(nibNameOrNil: String?) -> UIView? {   FXDLog_Func()
+	func sceneView(fromNibName nibName: String? = nil, owner: Any? = nil) -> UIView? {
+		FXDLog_Func()
 
-        var nibname = nibNameOrNil
+        var fromNibName = nibName
 
-        if (nibname == nil) {
-            nibname = String(describing: type(of: self))
+        if (fromNibName == nil) {
+            fromNibName = String(describing: type(of: self))
         }
 
-        let nib = UINib.init(nibName: nibname!, bundle: nil)
+		let fromNib: UINib? = UINib.init(nibName:fromNibName!, bundle: nil)
 
         //MARK: self must be the owner
-        let views = nib.instantiate(withOwner: self, options: nil)
+        let viewArray: [UIView]? = fromNib?.instantiate(withOwner: self, options: nil) as? [UIView]
 
-        let sceneView: UIView? = views.first as? UIView
-        FXDLog("\(String(describing: sceneView))")
+        FXDLog("\(String(describing: viewArray?.first))")
 
-        return sceneView
+        return viewArray?.first
     }
 
 }
