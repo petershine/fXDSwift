@@ -21,28 +21,23 @@ class FXDViewController: UIViewController {
 	required init?(coder aDecoder: NSCoder) {	FXDLog_SEPARATE()
 		super.init(coder: aDecoder)
 	}
-	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {	FXDLog_SEPARATE()
+	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+		FXDLog_SEPARATE()
         //FIXME: Developer different overriding(overloading)
 
-        var nibname = nibNameOrNil
-
-        if (nibname == nil) {
-            nibname = String(describing: type(of: self))
-        }
-
         //MARK: Should use nib instead of xib for file type
-        let resourcePath = Bundle.main.path(forResource: nibname, ofType: "nib")
+        let resourcePath = Bundle.main.path(forResource: nibNameOrNil, ofType: "nib")
 
         let nibExists = FileManager.default.fileExists(atPath: resourcePath!)
 
         if (nibExists == false) {
             //FIXME: Try using super class name could be used.
-            nibname = nil
+			//FIXME: Should warn
         }
 
-        FXDLog("\(String(describing: nibname)) \(String(describing: nibBundleOrNil))")
+        FXDLog("\(String(describing: nibNameOrNil)) \(String(describing: nibBundleOrNil))")
 
-		super.init(nibName: nibname, bundle: nibBundleOrNil)
+		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
         //FIXME: Re-consider if this manual execution is necessary
         self.awakeFromNib()
