@@ -208,20 +208,20 @@ let durationAnimation = 0.3
 }
 
 @objc extension UIView {
-	func superClassView(forClassName className: String?) -> Any? {
-		var superClassView: Any? = nil
+	func superView(forClassName className: String?) -> Any? {
+		var superView: Any? = nil
 
 		if self.superview != nil {
 			if String(describing: self.superview) == className {
-				superClassView = self.superview
+				superView = self.superview
 			}
 			else {
 				// Recursive call
-				superClassView = self.superview?.superClassView(forClassName: className)
+				superView = self.superview?.superView(forClassName: className)
 			}
 		}
 
-		return superClassView
+		return superView
 	}
 }
 
