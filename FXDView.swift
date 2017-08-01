@@ -104,7 +104,7 @@ extension UIView {
 		var fromNibName = nibName
 
 		if fromNibName == nil {
-			fromNibName = String(describing: type(of: self))
+			fromNibName = String(describing: self)
 		}
 		FXDLog("fromNibName: \(String(describing: fromNibName))")
 
@@ -208,20 +208,20 @@ let durationAnimation = 0.3
 }
 
 @objc extension UIView {
-	func superView(ofClassName className: String?) -> Any? {
-		var superView: Any? = nil
+	func superClassView(forClassName className: String?) -> Any? {
+		var superClassView: Any? = nil
 
 		if self.superview != nil {
-			if String(describing: type(of: self.superview)) == className {
-				superView = self.superView
+			if String(describing: self.superview) == className {
+				superClassView = self.superview
 			}
 			else {
 				// Recursive call
-				superView = self.superview?.superView(ofClassName: className)
+				superClassView = self.superview?.superClassView(forClassName: className)
 			}
 		}
 
-		return superView
+		return superClassView
 	}
 }
 
