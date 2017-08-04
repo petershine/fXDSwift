@@ -8,6 +8,9 @@ import Accounts
 
 import CoreLocation
 
+import TwitterCore
+import TwitterKit
+
 
 //FIXME: Prepare formatter function
 //#define urlrootTwitterAPI			@"https://api.twitter.com/1.1/"
@@ -52,6 +55,12 @@ class FXDmoduleTwitter: NSObject {
 	}()
 
 
+	override init() {
+		super.init()
+
+		//FIXME: To be overridden by the application, to use its key and secret
+		Twitter.sharedInstance().start(withConsumerKey: "", consumerSecret: "")
+	}
 
 	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
