@@ -37,8 +37,15 @@ import Foundation
 		var presentingScene: UIViewController? = fromScene
 		
 		if presentingScene == nil {
-			let mainWindow: UIWindow = UIApplication.shared.windows.last!
-			presentingScene = mainWindow.rootViewController!
+			// Traverse to find the right presentingScene (live rootViewController in the most front window)
+
+			for window in UIApplication.shared.windows.reversed() {
+				
+				if window.rootViewController != nil {
+					presentingScene = window.rootViewController!
+					break
+				}
+			}
 		}
 
 		DispatchQueue.main.async {
