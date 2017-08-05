@@ -55,11 +55,13 @@ class FXDmoduleTwitter: NSObject {
 	}()
 
 
-	override init() {
+	@objc required init(withTwitterKey twitterKey: String!, twitterSecret: String!) {
+		FXDLog_Func()
 		super.init()
 
-		//FIXME: To be overridden by the application, to use its key and secret
-		Twitter.sharedInstance().start(withConsumerKey: "", consumerSecret: "")
+		//FIXME: Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'TwitterKitResources.bundle resources file not found. Please re-install TwitterKit with CocoaPods to ensure it is properly set-up.'
+
+		Twitter.sharedInstance().start(withConsumerKey: twitterKey!, consumerSecret: twitterSecret!)
 	}
 
 	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
