@@ -50,7 +50,7 @@ class FXDmoduleYoutube {
 		FXDLog(request)
 
 		let searchTask = URLSession.shared.dataTask(with: request) {
-			[weak self] (data:Data?, response:URLResponse?, error:Error?) in
+			(data:Data?, response:URLResponse?, error:Error?) in
 
 			FXDLog(data as Any)
 			FXDLog(response as Any)

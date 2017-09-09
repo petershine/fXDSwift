@@ -181,7 +181,7 @@ class FXDmoduleFacebook: NSObject {
 		let cancelAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel) {
-				[weak self] (action: UIAlertAction) in
+				(action: UIAlertAction) in
 
 				callback(false, NSNull())
 		}
@@ -189,7 +189,7 @@ class FXDmoduleFacebook: NSObject {
 		let signOutAction = UIAlertAction(
 			title: NSLocalizedString("Sign Out", comment: ""),
 			style: .destructive) {
-				[weak self] (action: UIAlertAction) in
+				(action: UIAlertAction) in
 
 				//FIXME: resetCredential: Sign Out
 
@@ -280,7 +280,7 @@ class FXDmoduleFacebook: NSObject {
 					batchConnection.add(
 						graphRequestPage,
 						completionHandler: {
-							[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
+							(requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 							FXDLog(result as Any)
 							FXDLog(error as Any)
@@ -359,7 +359,7 @@ class FXDmoduleFacebook: NSObject {
 			//message = "(#200) Insufficient permission to post to target on behalf of the viewer";
 			_ = graphRequestPost?.start(
 				completionHandler: {
-					[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
+					(requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 					FXDLog(result as Any)
 					FXDLog(error as Any)
@@ -390,7 +390,7 @@ class FXDmoduleFacebook: NSObject {
 
 		_ = graphRequestSearch?.start(
 			completionHandler:{
-				[weak self] (requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
+				(requested:FBSDKGraphRequestConnection?, result:Any?, error:Error?) in
 
 				FXDLog(result as Any)
 				FXDLog(error as Any)

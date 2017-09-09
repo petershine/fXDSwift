@@ -89,7 +89,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.mainAccountStore.requestAccessToAccounts(with: self.mainAccountType, options: nil) {
-			[weak self] (granted: Bool, error: Error?) in
+			(granted: Bool, error: Error?) in
 
 			DispatchQueue.main.async {
 				guard granted else {
@@ -125,7 +125,7 @@ class FXDmoduleTwitter: NSObject {
 		let cancelAction: UIAlertAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
 			style: .cancel) {
-				[weak self] (action: UIAlertAction) in
+				(action: UIAlertAction) in
 
 				callback(false, NSNull())
 		}
@@ -216,7 +216,7 @@ class FXDmoduleTwitter: NSObject {
 
 
 		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) {
-			[weak self] (renewResult:ACAccountCredentialRenewResult, error:Error?) in
+			(renewResult:ACAccountCredentialRenewResult, error:Error?) in
 
 			FXDLog(renewResult)
 			FXDLog(error as Any)
@@ -251,7 +251,7 @@ class FXDmoduleTwitter: NSObject {
 			defaultRequest.account = self?.currentMainAccount
 
 			defaultRequest.perform(handler: {
-				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
 				FXDLog(responseData as Any)
 				FXDLog(urlResponse as Any)
@@ -306,7 +306,7 @@ class FXDmoduleTwitter: NSObject {
 			defaultRequest.account = self?.currentMainAccount
 
 			defaultRequest.perform(handler: {
-				[weak self] (responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
 
 				FXDLog(responseData as Any)
 				FXDLog(urlResponse as Any)
