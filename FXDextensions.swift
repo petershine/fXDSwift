@@ -4,11 +4,9 @@ import UIKit
 import Foundation
 
 
-@objc extension UIAlertController {
-	//FIXME: Re-consider about returning like similar original method
+extension UIAlertController {
 
-	class func simpleAlert(withTitle title: String?,
-	                       message: String?) {
+	@objc class func simpleAlert(withTitle title: String?, message: String?) {
 		self.simpleAlert(withTitle: title,
 		                 message: message,
 		                 cancelText: nil,
@@ -16,26 +14,24 @@ import Foundation
 		                 handler: nil)
 	}
 
-	class func simpleAlert(withTitle title: String?,
-	                       message: String? = nil,
-	                       cancelText: String? = NSLocalizedString("OK", comment: ""),
-	                       fromScene: UIViewController? = nil,
-	                       handler: ((UIAlertAction) -> Swift.Void)? = nil) {
-		//MARK: Assume this is the condition for simple alerting without choice
+	@objc class func simpleAlert(withTitle title: String?, message: String?,
+	                             cancelText: String?,
+	                             fromScene: UIViewController?,
+	                             handler: ((UIAlertAction) -> Swift.Void)?) {
 
 		let alert = UIAlertController(title: title,
 		                              message: message,
 		                              preferredStyle: .alert)
-		
-		let cancelAction = UIAlertAction(title: cancelText,
+
+		let cancelAction = UIAlertAction(title: ((cancelText != nil) ? cancelText! : NSLocalizedString("OK", comment: "")),
 		                                 style: .cancel,
 		                                 handler: handler)
-		
+
 		alert.addAction(cancelAction)
-		
-		
+
+
 		var presentingScene: UIViewController? = fromScene
-		
+
 		if presentingScene == nil {
 			// Traverse to find the right presentingScene (live rootViewController in the most front window)
 
@@ -56,4 +52,3 @@ import Foundation
 		}
 	}
 }
-
