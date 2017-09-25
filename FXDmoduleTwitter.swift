@@ -59,8 +59,6 @@ class FXDmoduleTwitter: NSObject {
 		FXDLog_Func()
 		super.init()
 
-		//FIXME: Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'TwitterKitResources.bundle resources file not found. Please re-install TwitterKit with CocoaPods to ensure it is properly set-up.'
-
 		Twitter.sharedInstance().start(withConsumerKey: twitterKey!, consumerSecret: twitterSecret!)
 	}
 
@@ -169,39 +167,6 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 		presentingScene.present(alertController, animated: true, completion: nil)
-	}
-
-
-	func socialComposeController(initialText: String?, imageArray: Array<Any>?, URLarray: Array<Any>?) -> SLComposeViewController? {	FXDLog_Func()
-
-		guard SLComposeViewController.isAvailable(forServiceType: SLServiceTypeTwitter) else {
-			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please connect to Twitter", comment: ""),
-			                              message: self.reasonForConnecting)
-
-			return nil
-		}
-
-
-		let socialComposeController: SLComposeViewController = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-
-
-		if initialText != nil {
-			socialComposeController.setInitialText(initialText!)
-		}
-
-		if imageArray != nil {
-			for image: UIImage in imageArray as! [UIImage] {
-				socialComposeController.add(image)
-			}
-		}
-
-		if URLarray != nil {
-			for url: URL in URLarray as! [URL] {
-				socialComposeController.add(url)
-			}
-		}
-
-		return socialComposeController
 	}
 
 
