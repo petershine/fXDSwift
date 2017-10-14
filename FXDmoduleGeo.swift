@@ -62,7 +62,7 @@ class FXDmoduleGeo {
 			self.startLocationManager(self.mainLocationManager)
 		}
 		else {
-			//MARK: If the NSLocationAlwaysUsageDescription key is not specified in your Info.plist, this method will do nothing, as your app will be assumed not to support Always authorization.
+			//MARK: If the NSLocationAlwaysAndWhenInUseUsageDescription, NSLocationAlwaysUsageDescription, NSLocationWhenInUseUsageDescription key is not specified in your Info.plist, this method will do nothing, as your app will be assumed not to support Always authorization.
 
 			self.mainLocationManager?.requestAlwaysAuthorization()
 		}
