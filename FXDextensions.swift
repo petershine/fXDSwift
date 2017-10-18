@@ -36,6 +36,10 @@ extension UIAlertController {
 			// Traverse to find the right presentingScene (live rootViewController in the most front window)
 
 			for window in UIApplication.shared.windows.reversed() {
+				if window != UIApplication.shared.keyWindow {
+					continue
+				}
+
 				
 				if window.rootViewController != nil {
 					presentingScene = window.rootViewController!
