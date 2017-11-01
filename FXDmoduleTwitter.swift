@@ -18,40 +18,15 @@ import TwitterKit
 //#define urlstringTwitterUserShow		urlstringTwitter(@"users/show.json")
 //#define urlstringTwitterStatusUpdate	urlstringTwitter(@"statuses/update.json")
 
+let userdefaultObjMainTwitterAccountIdentifier: String = "MainTwitterAccountIdentifierObjKey"
+
 
 class FXDmoduleTwitter: NSObject {
 	
 	let reasonForConnecting = NSLocalizedString("Please go to device's Settings and add your Twitter account", comment: "")
 
-	let mainAccountStore: ACAccountStore = ACAccountStore()
-
-	lazy var mainAccountType: ACAccountType? = {
-		return self.mainAccountStore.accountType(withAccountTypeIdentifier:ACAccountTypeIdentifierTwitter)
-	}()
-    
-    @objc lazy var currentMainAccount: ACAccount? = {
-		var mainAccount: ACAccount? = nil
-
-		let accountObjKey: String = userdefaultObjMainTwitterAccountIdentifier
-
-		if let identifier: String = UserDefaults.standard.string(forKey: accountObjKey) {
-
-			if (self.mainAccountType != nil && self.mainAccountType!.accessGranted) {
-				mainAccount = self.mainAccountStore.account(withIdentifier: identifier)
-				UserDefaults.standard.set(identifier, forKey: accountObjKey)
-			}
-			else {
-				UserDefaults.standard.removeObject(forKey: accountObjKey)
-			}
-
-		}
-		else {
-			UserDefaults.standard.removeObject(forKey: accountObjKey)
-		}
-
-		UserDefaults.standard.synchronize()
-
-		return mainAccount
+	@objc lazy var authenticatedSession: TWTRAuthSession? = {
+		return Twitter.sharedInstance().sessionStore.session()
 	}()
 
 
@@ -64,8 +39,9 @@ class FXDmoduleTwitter: NSObject {
 
 	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		FXDLog(self.mainAccountType?.accountTypeDescription as Any)
-		FXDLog(self.mainAccountType?.accessGranted as Any)
+		FXDLog(self.authenticatedSession?.authToken as Any)
+		FXDLog(self.authenticatedSession?.authTokenSecret as Any)
+		FXDLog(self.authenticatedSession?.userID as Any)
 
 
 		func GrantedAccess() -> Void {
@@ -80,33 +56,31 @@ class FXDmoduleTwitter: NSObject {
 
 
 
-		guard self.mainAccountType?.accessGranted != true else {
+		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == false else {
 			GrantedAccess()
 			return
 		}
 
 
-		self.mainAccountStore.requestAccessToAccounts(with: self.mainAccountType, options: nil) {
-			(granted: Bool, error: Error?) in
+		Twitter.sharedInstance().logIn(completion: { (session, error) in
 
-			DispatchQueue.main.async {
-				guard granted else {
-					DeniedAccess()
-					return
-				}
-
+			if (session != nil) {
+				FXDLog("signed in as \(String(describing: session?.userName))")
 				GrantedAccess()
+
+			} else {
+				FXDLog("error: \(String(describing: error?.localizedDescription))")
+				DeniedAccess()
 			}
-		}
+		})
 	}
 
 
 	func showActionSheet(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		let multiAccount: [ACAccount] = self.mainAccountStore.accounts(with:self.mainAccountType) as! [ACAccount]
-		FXDLog(multiAccount)
+		FXDLog(self.authenticatedSession as Any)
 
-		guard multiAccount.count > 0 else {
+		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
 			                              message: self.reasonForConnecting)
 
@@ -137,7 +111,8 @@ class FXDmoduleTwitter: NSObject {
 				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
 				UserDefaults.standard.synchronize()
 
-				self?.currentMainAccount = nil
+				let userID = self?.authenticatedSession?.userID
+				Twitter.sharedInstance().sessionStore.logOutUserID(userID!)
 
 				callback(true, NSNull())
 		}
@@ -146,18 +121,15 @@ class FXDmoduleTwitter: NSObject {
 		alertController.addAction(signOutAction)
 
 
-		for account: ACAccount in multiAccount {
+		for account: TWTRSession in Twitter.sharedInstance().sessionStore.existingUserSessions() as! [TWTRSession] {
 
 			let selectAction: UIAlertAction = UIAlertAction(
-				title: String("@\(account.username!)"),
+				title: String("@\(account.userName)"),
 				style: .default,
 				handler: {
 					[weak self] (action: UIAlertAction) in
 
-					self?.currentMainAccount = account
-					FXDLog(self?.currentMainAccount as Any)
-
-					UserDefaults.standard.set(account.identifier, forKey: userdefaultObjMainTwitterAccountIdentifier)
+					UserDefaults.standard.set(account.userID, forKey: userdefaultObjMainTwitterAccountIdentifier)
 					UserDefaults.standard.synchronize()
 
 					callback(true, NSNull())
@@ -170,118 +142,106 @@ class FXDmoduleTwitter: NSObject {
 	}
 
 
-	func didRenewAccountCredential(_ callback: @escaping FXDcallback) {	FXDLog_Func()
-
-		FXDLog(self.currentMainAccount as Any)
-
-		guard self.currentMainAccount == nil else {
-			callback(true, NSNull())
-			return
-		}
-
-
-		self.mainAccountStore.renewCredentials(for: self.currentMainAccount) {
-			(renewResult:ACAccountCredentialRenewResult, error:Error?) in
-
-			FXDLog(renewResult)
-			FXDLog(error as Any)
-
-			callback(renewResult == .renewed, NSNull())
-		}
-	}
-
-
-
 	//MARK: Twitter specific
 	func twitterUserShow(withScreenName screenName: String) {	FXDLog_Func()
 
-		FXDLog(self.currentMainAccount as Any)
+		FXDLog(self.authenticatedSession as Any)
 
-		guard self.currentMainAccount != nil else {
+		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			return
 		}
 
 
-		self.didRenewAccountCredential({
-			[weak self] (shouldRequest: Bool?, nothing: Any?) in
+		let method = "GET"
+		let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
+		let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
 
-			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/users/show.json")!
-			let parameters: Dictionary = [objkeyTwitterScreenName: screenName]
+		let client = TWTRAPIClient(userID: self.authenticatedSession?.userID)
+		var clientError : NSError?
 
-			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter,
-			                                          requestMethod: .GET,
-			                                          url: requestURL,
-			                                          parameters: parameters)
+		let request = client.urlRequest(withMethod: method,
+		                                url: requestURL.absoluteString,
+		                                parameters: parameters,
+		                                error: &clientError)
 
-			defaultRequest.account = self?.currentMainAccount
+		client.sendTwitterRequest(request) {
+			(response, data, connectionError) in
+			
+			if connectionError != nil {
+				FXDLog("Error: \(String(describing: connectionError))")
+			}
 
-			defaultRequest.perform(handler: {
-				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
+			do {
+				let json = try JSONSerialization.jsonObject(with: data!, options: [])
+				FXDLog("json: \(json)")
+			} catch let jsonError as NSError {
+				FXDLog("json error: \(jsonError.localizedDescription)")
+			}
 
-				FXDLog(responseData as Any)
-				FXDLog(urlResponse as Any)
-				FXDLog(error as Any)
+			FXDLog(data as Any)
+			FXDLog(response as Any)
+			FXDLog(connectionError as Any)
 
-				//FIXME: Reconsider bring evaluation to be more generic function
-			})
-		})
+			//FIXME: Reconsider bringing evaluation to be more generic function
+		}
 	}
 
 	@objc func twitterStatusUpdate(withTweetText tweetText: String?, latitude: CLLocationDegrees, longitude: CLLocationDegrees, placeId: String?, callback: @escaping FXDcallback) {	FXDLog_Func()
 
-		FXDLog(self.currentMainAccount as Any)
+		FXDLog(self.authenticatedSession as Any)
 
-		guard self.currentMainAccount != nil else {
+		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			callback(false, NSNull())
 			return
 		}
 
 
-		self.didRenewAccountCredential({
-			[weak self] (shouldContinue: Bool, nothing: Any) in
+		let method = "POST"
+		let requestURL: URL = URL(string: "https://api.twitter.com/1.1/statuses/update.json")!
 
-			FXDLog(shouldContinue)
+		var parameters: Dictionary<String, Any> = [objkeyTwitterStatus: tweetText ?? ""]
+		parameters[objkeyTwitterDisplayCoordinates] = "true"
 
-			guard shouldContinue else {
-				callback(false, NSNull())
-				return
+		if latitude != 0.0 && longitude != 0.0 {
+			parameters[objkeyTwitterLat] = latitude
+			parameters[objkeyTwitterLong] = longitude
+		}
+
+		if placeId != nil {
+			parameters[objkeyTwitterPlaceId] = placeId
+		}
+
+
+		let client = TWTRAPIClient(userID: self.authenticatedSession?.userID)
+		var clientError : NSError?
+
+		let request = client.urlRequest(withMethod: method,
+		                                url: requestURL.absoluteString,
+		                                parameters: parameters,
+		                                error: &clientError)
+
+		client.sendTwitterRequest(request) {
+			(response, data, connectionError) in
+
+			if connectionError != nil {
+				FXDLog("Error: \(String(describing: connectionError))")
 			}
 
-
-			let requestURL: URL = URL(string: "https://api.twitter.com/1.1/statuses/update.json")!
-
-			var parameters: Dictionary<String, Any> = [objkeyTwitterStatus: tweetText ?? ""]
-			parameters[objkeyTwitterDisplayCoordinates] = "true"
-
-			if latitude != 0.0 && longitude != 0.0 {
-				parameters[objkeyTwitterLat] = latitude
-				parameters[objkeyTwitterLong] = longitude
+			do {
+				let json = try JSONSerialization.jsonObject(with: data!, options: [])
+				FXDLog("json: \(json)")
+			} catch let jsonError as NSError {
+				FXDLog("json error: \(jsonError.localizedDescription)")
 			}
 
-			if placeId != nil {
-				parameters[objkeyTwitterPlaceId] = placeId
-			}
+			FXDLog(data as Any)
+			FXDLog(response as Any)
+			FXDLog(connectionError as Any)
 
+			//FIXME: Reconsider bringing evaluation to be more generic function
 
-			let defaultRequest: SLRequest = SLRequest(forServiceType: SLServiceTypeTwitter,
-			                                          requestMethod: .POST,
-			                                          url: requestURL,
-			                                          parameters: parameters)
-
-			defaultRequest.account = self?.currentMainAccount
-
-			defaultRequest.perform(handler: {
-				(responseData: Data?, urlResponse: HTTPURLResponse?, error: Error?) in
-
-				FXDLog(responseData as Any)
-				FXDLog(urlResponse as Any)
-				FXDLog(error as Any)
-
-				//FIXME: Reconsider bringing evaluation to be more generic function
-
-				callback(error == nil, NSNull())
-			})
-		})
+			callback(connectionError == nil, NSNull())
+		}
 	}
 }
 
