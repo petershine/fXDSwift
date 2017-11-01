@@ -3,9 +3,6 @@
 import UIKit
 import Foundation
 
-import Social
-import Accounts
-
 import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit

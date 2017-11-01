@@ -3,9 +3,6 @@
 import UIKit
 import Foundation
 
-import Social
-import Accounts
-
 import CoreLocation
 
 import TwitterCore
@@ -17,8 +14,6 @@ import TwitterKit
 //#define urlstringTwitter(method)	[NSString stringWithFormat:@"%@%@", urlrootTwitterAPI, method]
 //#define urlstringTwitterUserShow		urlstringTwitter(@"users/show.json")
 //#define urlstringTwitterStatusUpdate	urlstringTwitter(@"statuses/update.json")
-
-let userdefaultObjMainTwitterAccountIdentifier: String = "MainTwitterAccountIdentifierObjKey"
 
 
 class FXDmoduleTwitter: NSObject {
@@ -108,9 +103,6 @@ class FXDmoduleTwitter: NSObject {
 			style: .destructive) {
 				[weak self] (action: UIAlertAction) in
 
-				UserDefaults.standard.removeObject(forKey: userdefaultObjMainTwitterAccountIdentifier)
-				UserDefaults.standard.synchronize()
-
 				let userID = self?.authenticatedSession?.userID
 				Twitter.sharedInstance().sessionStore.logOutUserID(userID!)
 
@@ -127,10 +119,7 @@ class FXDmoduleTwitter: NSObject {
 				title: String("@\(account.userName)"),
 				style: .default,
 				handler: {
-					[weak self] (action: UIAlertAction) in
-
-					UserDefaults.standard.set(account.userID, forKey: userdefaultObjMainTwitterAccountIdentifier)
-					UserDefaults.standard.synchronize()
+					(action: UIAlertAction) in
 
 					callback(true, NSNull())
 			})
