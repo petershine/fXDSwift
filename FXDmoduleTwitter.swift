@@ -20,9 +20,11 @@ class FXDmoduleTwitter: NSObject {
 	
 	let reasonForConnecting = NSLocalizedString("Please go to device's Settings and add your Twitter account", comment: "")
 
-	@objc lazy var authenticatedSession: TWTRAuthSession? = {
-		return Twitter.sharedInstance().sessionStore.session()
-	}()
+	@objc var authenticatedSession: TWTRAuthSession? {
+		get {
+			return Twitter.sharedInstance().sessionStore.session()
+		}
+	}
 
 
 	@objc required init(withTwitterKey twitterKey: String!, twitterSecret: String!) {
@@ -38,21 +40,8 @@ class FXDmoduleTwitter: NSObject {
 		FXDLog(self.authenticatedSession?.authTokenSecret as Any)
 		FXDLog(self.authenticatedSession?.userID as Any)
 
-
-		func GrantedAccess() -> Void {
-			self.showActionSheet(presentingScene: presentingScene, callback: callback)
-		}
-
-		func DeniedAccess() -> Void {
-			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""),
-			                              message: self.reasonForConnecting)
-			callback(false, NSNull())
-		}
-
-
-
 		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == false else {
-			GrantedAccess()
+			self.showActionSheet(presentingScene: presentingScene, callback: callback)
 			return
 		}
 
@@ -61,11 +50,13 @@ class FXDmoduleTwitter: NSObject {
 
 			if (session != nil) {
 				FXDLog("signed in as \(String(describing: session?.userName))")
-				GrantedAccess()
+				self.showActionSheet(presentingScene: presentingScene, callback: callback)
 
 			} else {
 				FXDLog("error: \(String(describing: error?.localizedDescription))")
-				DeniedAccess()
+				UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""),
+				                              message: self.reasonForConnecting)
+				callback(false, NSNull())
 			}
 		})
 	}
