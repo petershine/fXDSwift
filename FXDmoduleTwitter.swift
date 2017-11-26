@@ -183,8 +183,8 @@ class FXDmoduleTwitter: NSObject {
 		parameters[objkeyTwitterDisplayCoordinates] = "true"
 
 		if latitude != 0.0 && longitude != 0.0 {
-			parameters[objkeyTwitterLat] = latitude
-			parameters[objkeyTwitterLong] = longitude
+			parameters[objkeyTwitterLat] = String(latitude)
+			parameters[objkeyTwitterLong] = String(longitude)
 		}
 
 		if placeId != nil {
