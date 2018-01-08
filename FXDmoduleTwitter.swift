@@ -22,7 +22,7 @@ class FXDmoduleTwitter: NSObject {
 
 	@objc var authenticatedSession: TWTRAuthSession? {
 		get {
-			return Twitter.sharedInstance().sessionStore.session()
+			return TWTRTwitter.sharedInstance().sessionStore.session()
 		}
 	}
 
@@ -31,7 +31,7 @@ class FXDmoduleTwitter: NSObject {
 		FXDLog_Func()
 		super.init()
 
-		Twitter.sharedInstance().start(withConsumerKey: twitterKey!, consumerSecret: twitterSecret!)
+		TWTRTwitter.sharedInstance().start(withConsumerKey: twitterKey!, consumerSecret: twitterSecret!)
 	}
 
 	@objc func signInBySelectingAccount(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
@@ -40,13 +40,13 @@ class FXDmoduleTwitter: NSObject {
 		FXDLog(self.authenticatedSession?.authTokenSecret as Any)
 		FXDLog(self.authenticatedSession?.userID as Any)
 
-		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == false else {
+		guard TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() == false else {
 			self.showActionSheet(presentingScene: presentingScene, callback: callback)
 			return
 		}
 
 
-		Twitter.sharedInstance().logIn(completion: { (session, error) in
+		TWTRTwitter.sharedInstance().logIn(completion: { (session, error) in
 
 			if (session != nil) {
 				FXDLog("signed in as \(String(describing: session?.userName))")
@@ -66,7 +66,7 @@ class FXDmoduleTwitter: NSObject {
 
 		FXDLog(self.authenticatedSession as Any)
 
-		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
+		guard TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
 			                              message: self.reasonForConnecting)
 
@@ -95,7 +95,7 @@ class FXDmoduleTwitter: NSObject {
 				[weak self] (action: UIAlertAction) in
 
 				let userID = self?.authenticatedSession?.userID
-				Twitter.sharedInstance().sessionStore.logOutUserID(userID!)
+				TWTRTwitter.sharedInstance().sessionStore.logOutUserID(userID!)
 
 				callback(true, NSNull())
 		}
@@ -104,7 +104,7 @@ class FXDmoduleTwitter: NSObject {
 		alertController.addAction(signOutAction)
 
 
-		for account: TWTRSession in Twitter.sharedInstance().sessionStore.existingUserSessions() as! [TWTRSession] {
+		for account: TWTRSession in TWTRTwitter.sharedInstance().sessionStore.existingUserSessions() as! [TWTRSession] {
 
 			let selectAction: UIAlertAction = UIAlertAction(
 				title: String("@\(account.userName)"),
@@ -127,7 +127,7 @@ class FXDmoduleTwitter: NSObject {
 
 		FXDLog(self.authenticatedSession as Any)
 
-		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
+		guard TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			return
 		}
 
@@ -140,9 +140,9 @@ class FXDmoduleTwitter: NSObject {
 		var clientError : NSError?
 
 		let request = client.urlRequest(withMethod: method,
-		                                url: requestURL.absoluteString,
-		                                parameters: parameters,
-		                                error: &clientError)
+										urlString: requestURL.absoluteString,
+										parameters: parameters,
+										error: &clientError)
 
 		client.sendTwitterRequest(request) {
 			(response, data, connectionError) in
@@ -170,7 +170,7 @@ class FXDmoduleTwitter: NSObject {
 
 		FXDLog(self.authenticatedSession as Any)
 
-		guard Twitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
+		guard TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
 			callback(false, NSNull())
 			return
 		}
@@ -196,9 +196,9 @@ class FXDmoduleTwitter: NSObject {
 		var clientError : NSError?
 
 		let request = client.urlRequest(withMethod: method,
-		                                url: requestURL.absoluteString,
-		                                parameters: parameters,
-		                                error: &clientError)
+										urlString: requestURL.absoluteString,
+										parameters: parameters,
+										error: &clientError)
 
 		client.sendTwitterRequest(request) {
 			(response, data, connectionError) in
