@@ -46,39 +46,59 @@ class FXDmoduleTwitter: NSObject {
 		}
 
 
-		TWTRTwitter.sharedInstance().logIn(completion: { (session, error) in
+		TWTRTwitter.sharedInstance().logIn(completion: {
+			[weak self] (session, error) in
 
-			if (session != nil) {
+			guard session == nil else {
 				FXDLog("signed in as \(String(describing: session?.userName))")
-				self.showActionSheet(presentingScene: presentingScene, callback: callback)
 
-			} else {
-				FXDLog("error: \(String(describing: error?.localizedDescription))")
-				UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""),
-				                              message: self.reasonForConnecting)
-				callback(false, NSNull())
+				UIAlertController.simpleAlert(withTitle: "Signed in as\n \"\(session!.userName)\"",
+											  message: nil)
+
+				callback(true, NSNull())
+				return
 			}
+
+
+			FXDLog("error: \(String(describing: error?.localizedDescription))")
+			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please grant Twitter access in Settings", comment: ""),
+										  message: self?.reasonForConnecting)
+			callback(false, NSNull())
 		})
 	}
 
 
 	func showActionSheet(presentingScene: UIViewController, callback: @escaping FXDcallback) {	FXDLog_Func()
-
 		FXDLog(self.authenticatedSession as Any)
 
-		guard TWTRTwitter.sharedInstance().sessionStore.hasLoggedInUsers() == true else {
+		let sessionStore: TWTRSessionStore = TWTRTwitter.sharedInstance().sessionStore
+
+		guard sessionStore.hasLoggedInUsers() == true else {
 			UIAlertController.simpleAlert(withTitle: NSLocalizedString("Please sign up for a Twitter account", comment: ""),
 			                              message: self.reasonForConnecting)
 
 			callback(false, NSNull())
 			return
 		}
-		
 
-		let alertController: UIAlertController = UIAlertController(
-			title: NSLocalizedString("Please select your Twitter Account", comment: ""),
-			message: nil,
-			preferredStyle: .actionSheet)
+
+		FXDLog("sessionStore.existingUserSessions: \(sessionStore.existingUserSessions())")
+		FXDLog("sessionStore.existingUserSessions().count: \(sessionStore.existingUserSessions().count)")
+
+		var alertController: UIAlertController? = nil
+
+		if sessionStore.existingUserSessions().count > 1 {
+			alertController = UIAlertController(
+				title: NSLocalizedString("Please select your Twitter Account", comment: ""),
+				message: nil,
+				preferredStyle: .actionSheet)
+		}
+		else {
+			alertController = UIAlertController(
+				title: NSLocalizedString("Do you want to Sign-out?", comment: ""),
+				message: nil,
+				preferredStyle: .alert)
+		}
 
 		let cancelAction: UIAlertAction = UIAlertAction(
 			title: NSLocalizedString("Cancel", comment: ""),
@@ -95,30 +115,32 @@ class FXDmoduleTwitter: NSObject {
 				[weak self] (action: UIAlertAction) in
 
 				let userID = self?.authenticatedSession?.userID
-				TWTRTwitter.sharedInstance().sessionStore.logOutUserID(userID!)
+				sessionStore.logOutUserID(userID!)
 
 				callback(true, NSNull())
 		}
 
-		alertController.addAction(cancelAction)
-		alertController.addAction(signOutAction)
+		alertController?.addAction(cancelAction)
+		alertController?.addAction(signOutAction)
 
+		if sessionStore.existingUserSessions().count > 1 {
+			//FIXME: 'Could not cast value of type 'TWTRSession' (0x105c6e370) to 'TWTRSession' (0x1059a5cc8).'
+			for account: TWTRSession in sessionStore.existingUserSessions() as! [TWTRSession] {
 
-		for account: TWTRSession in TWTRTwitter.sharedInstance().sessionStore.existingUserSessions() as! [TWTRSession] {
+				let selectAction: UIAlertAction = UIAlertAction(
+					title: String("@\(account.userName)"),
+					style: .default,
+					handler: {
+						(action: UIAlertAction) in
 
-			let selectAction: UIAlertAction = UIAlertAction(
-				title: String("@\(account.userName)"),
-				style: .default,
-				handler: {
-					(action: UIAlertAction) in
+						callback(true, NSNull())
+				})
 
-					callback(true, NSNull())
-			})
-
-			alertController.addAction(selectAction)
+				alertController?.addAction(selectAction)
+			}
 		}
 
-		presentingScene.present(alertController, animated: true, completion: nil)
+		presentingScene.present(alertController!, animated: true, completion: nil)
 	}
 
 
