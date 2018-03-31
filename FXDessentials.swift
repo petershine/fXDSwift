@@ -11,18 +11,11 @@ import os.log
 typealias FXDcallback = (_ result: Bool, _ object: Any) -> Void
 
 
-//MARK: @objc can only be used with members of classes, @objc protocols, and concrete extensions of classes
-
-//FIXME: Adopt better debugging
-
+//MARK: Logging
 func FXDLog(_ items: Any..., separator: String = " ", terminator: String = "\n") {
 	#if ForDEVELOPER
+	//FIXME: How to use os_log for general cases?
 		debugPrint(items, separator: separator, terminator: terminator)
-
-        //FIXME: How to use os_log for general cases?
-		if #available(iOS 10.0, *) {
-		} else {
-		}
 	#endif
 }
 

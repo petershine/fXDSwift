@@ -7,9 +7,6 @@ import MediaPlayer
 
 import ReactiveSwift
 import Result
-/*
-import ReactiveCocoa
- */
 
 
 class FXDmoduleMedia: NSObject {
