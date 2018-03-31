@@ -27,15 +27,7 @@ class FXDmoduleMedia: NSObject {
 
 
     func startObservingMediaNotifications() {    FXDLog_Func()
-
-        //MARK: Intentional. Can't use mediaModule(musicPlayer) in simulator after all
-        FXDLog("TARGET_OS_SIMULATOR: \(TARGET_OS_SIMULATOR)")
-        guard TARGET_OS_SIMULATOR == 0 else {
-            return
-        }
-
-
-        //MARK: This app has crashed because it attempted to access privacy-sensitive data without a usage description.  The app's Info.plist must contain an NSAppleMusicUsageDescription key with a string value explaining to the user how the app uses this data.
+		//MARK: The app's Info.plist must contain an NSAppleMusicUsageDescription key with a string value explaining to the user how the app uses this data.
 
         NotificationCenter.default.addObserver(self,
                          selector: #selector(self.observedMPMusicPlayerControllerPlaybackStateDidChange(_:)),
@@ -59,21 +51,24 @@ class FXDmoduleMedia: NSObject {
 
         MPMediaLibrary.default().beginGeneratingLibraryChangeNotifications()
     }
-    
-    //MARK: Argument of '#selector' refers to instance method 'observedMPMusicPlayerControllerPlaybackStateDidChange' in 'FXDmoduleMedia' that depends on '@objc' inference deprecated in Swift 4
-    @objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
-        FXDLog(self.musicPlayer?.playbackState.rawValue as Any)
-    }
-    
-    @objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
-        FXDLog(self.musicPlayer?.nowPlayingItem?.title as Any)
-        FXDLog(self.lastMediaItem?.title as Any)
-        
-        //MARK: It's responsibility of the developer to control repeated item
-        self.nowplayingObserver.send(value: self.musicPlayer?.nowPlayingItem)
-    }
-    
-    @objc func observedMPMediaLibraryDidChange(_ notification: Notification) {
-        FXDLog(MPMediaLibrary.default().lastModifiedDate)
-    }
 }
+
+extension FXDmoduleMedia {
+
+	@objc func observedMPMusicPlayerControllerPlaybackStateDidChange(_ notification: Notification) {
+		FXDLog(self.musicPlayer?.playbackState.rawValue as Any)
+	}
+
+	@objc func observedMPMusicPlayerControllerNowPlayingItemDidChange(_ notification: Notification) {
+		FXDLog(self.musicPlayer?.nowPlayingItem?.title as Any)
+		FXDLog(self.lastMediaItem?.title as Any)
+
+		//MARK: It's responsibility of the developer to control repeated item
+		self.nowplayingObserver.send(value: self.musicPlayer?.nowPlayingItem)
+	}
+
+	@objc func observedMPMediaLibraryDidChange(_ notification: Notification) {
+		FXDLog(MPMediaLibrary.default().lastModifiedDate)
+	}
+}
+
