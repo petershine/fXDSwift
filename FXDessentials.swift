@@ -21,25 +21,15 @@ func FXDLog(_ items: Any..., separator: String = " ", terminator: String = "\n")
 
 func FXDLog_Func(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
-		if #available(iOS 10.0, *) {
-			os_log(" ")
-			os_log("[%@ %@]", (filename as NSString).lastPathComponent, function)
-		} else {
-			FXDLog(" ")
-			FXDLog("[\((filename as NSString).lastPathComponent) \(function)]")
-		}
+	os_log(" ")
+	os_log("[%@ %@]", (filename as NSString).lastPathComponent, function)
 	#endif
 }
 
 func FXDLog_SEPARATE(_ filename: String = #file, function: String = #function) {
 	#if ForDEVELOPER
-		if #available(iOS 10.0, *) {
-			os_log(" ")
-			os_log("\n\n[%@ %@]", (filename as NSString).lastPathComponent, function)
-		} else {
-			FXDLog(" ")
-			FXDLog("\n\n[\((filename as NSString).lastPathComponent) \(function)]")
-		}
+	os_log(" ")
+	os_log("\n\n[%@ %@]", (filename as NSString).lastPathComponent, function)
 	#endif
 }
 
