@@ -33,3 +33,14 @@ func FXDLog_SEPARATE(_ filename: String = #file, function: String = #function) {
 	#endif
 }
 
+
+//MARK: Protocols
+@objc protocol FXDprotocolObserver {
+	@objc optional func observedUIApplicationDidEnterBackground(_ notification: NSNotification)
+	@objc optional func observedUIApplicationDidBecomeActive(_ notification: NSNotification)
+	@objc optional func observedUIApplicationWillTerminate(_ notification: NSNotification)
+	@objc optional func observedUIApplicationDidReceiveMemoryWarning(_ notification: NSNotification)
+
+	@objc optional func observedUIDeviceBatteryLevelDidChange(_ notification: NSNotification)
+	@objc optional func observedUIDeviceOrientationDidChange(_ notification: NSNotification)
+}

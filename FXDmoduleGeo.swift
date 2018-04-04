@@ -10,7 +10,7 @@ import ReactiveSwift
 import Result
 
 
-class FXDmoduleGeo {
+class FXDmoduleGeo : FXDprotocolObserver {
 
 	let (lastLocationSignal, lastLocationObserver) = Signal<CLLocation?, NoError>.pipe()
 
@@ -131,8 +131,9 @@ class FXDmoduleGeo {
 			
 		}
 	}
+}
 
-
+extension FXDmoduleGeo: FXDprotocolObserver {
 	func observedUIApplicationDidBecomeActive(_ notification: Notification) {	FXDLog_Func()
 		FXDLog(notification)
 
